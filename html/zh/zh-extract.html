@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>账户提现</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body>
+
+
+		<div class="mui-content " id="content">
+			<div class="extractTo container">
+				<p class="txt-l" style="margin-bottom: 15px;">
+					选择银行卡：
+				</p>
+				<div class="bank"  id="currBankBox">
+						<img src="" alt="" width="60" height="60" id="chooseCarPic" />
+						<h5 id="chooseCarName">----</h5>
+						<div style="margin-top: 20px;" class="flex">
+							<p id="chooseCarNum" class="cor_txt f1">*****************</p>
+							<i class="mui-icon mui-icon-forward  mui-pull-right"></i>
+						</div>
+				</div>
+				<div id="noList">
+						您当前还没有绑定银行卡，请前往个人中心绑定！
+				</div>
+			</div>
+
+			<!--小提示-->
+			<div class="bank bg-w mui-clearfix cor_w">
+				<div class="pad10">
+					<p class="com_ti1 cor_b" style="margin: 15px auto;">小贴士提醒您：</p>
+				</div>
+				<div class="pad10 ">
+					<ul class="bank_node container">
+						<li class="txt-l cor_b flex">
+							<p class="txt-l cor_b">
+								<i class="iconfont   icon-zhanghuyichang  cor_b"></i>请确保您的银行卡可以正常使用
+							</p>
+							<li class="txt-l cor_b flex">
+								<p class="txt-l cor_b">
+									<i class="iconfont   icon-zhanghuyichang  cor_b"></i>请核对您的银行账户信息!
+								</p>
+							</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="extractMoney container">
+				<div class="depositBox extract">
+					<div class="depositBox_top">
+						<p class="txt-l">提现金额:</p>
+						<article class="moneyBox flex">
+							<p class=" txt-r">￥</p>
+							<div class="f1 txt-l">
+								<input type="text" id="inputMoney" name="" value="0" max="0" />
+							</div>
+						</article>
+						<aside class="flex">
+							<p class="txt-l xs">账户可用余额：<span id="allAmount">165</span></p>
+							<p class="txt-r cor_sky xs" id="allIn">全部取出</p>
+						</aside>
+					</div>
+				</div>
+				<p>2小时内到账</p>
+
+				<div style="margin-top:20px">
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-block " id="submitBtn">提交申请</button>
+				</div>
+			</div>
+		</div>
+
+		<!--银行选择弹窗-->
+		<div id="sheet" class="mui-popover mui-popover-bottom mui-popover-action ">
+			<!-- 可选择菜单 -->
+			<ul class="mui-table-view" id="bankList">
+				<script id="bankCards" type="text/template">
+					{{each ListInfo value i}}
+					<li class="mui-table-view-cell bankcar flex" key={{i}} code={{value.CARD_CODE}}>
+						<img src={{baseUrl + value.BANK_LOGO}} alt="" width="40" height="40" />
+						<div class="f1 txt-r">
+							<p>{{value.CARD_NUM}}</p>
+							<p>{{value.AFFILIATED_BANK}}</p>
+						</div>
+					</li>
+					{{/each}}
+				</script>
+			</ul>
+			<!-- 取消菜单 -->
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#sheet"><b>取消</b></a>
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/arttemp.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+				
+				var wv = plus.webview.currentWebview();
+				wv.setStyle({
+					titleNView: {
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							}
+						}
+				});
+				
+//				app.createPage();
+
+				var tk = app.getState().token;
+				var self = plus.webview.currentWebview();
+				//				获取账户余额
+				var maxAmount = self.maxAmount
+				//				金额输入框
+				var inputMoney = document.getElementById('inputMoney')
+				//				全部存入
+				var allIn = document.getElementById('allIn')
+				//				全部金额
+				var allAmount = document.getElementById('allAmount')
+				//				点击选择其他银行卡				
+				var chooseCard = document.getElementById('chooseCarNum');
+				//				当前银行卡名字				
+				var chooseCarName = document.getElementById('chooseCarName');
+				//				当前的银行卡logo				
+				var chooseCarPic = document.getElementById('chooseCarPic');
+				//				全局的银行卡数组
+				var cardArr
+				//				当前的银行卡code
+				var currCode
+
+				//				初始化数值
+				inputMoney.max = maxAmount
+				allAmount.innerHTML = maxAmount
+				
+//				加载账户下的银行卡
+				mui.ajax(app.baseUrl + '/Data/api/Bank/GetStaffBankList', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+						if(data.Success) {
+							if(data.Data.ListInfo.length == 0) {
+								document.getElementById('noList').style.display='block'
+								document.getElementById('currBankBox').style.display='none'
+							} else {
+								document.getElementById('noList').style.display='none'
+								document.getElementById('currBankBox').style.display='block'
+								var list = {
+									baseUrl: app.baseUrl,
+									ListInfo: data.Data.ListInfo
+								};
+								cardArr = data.Data.ListInfo
+								var html = template('bankCards', list);
+								document.getElementById('bankList').innerHTML = html;
+								currCode = cardArr[0].CARD_CODE;
+								chooseCarPic.src = app.baseUrl + cardArr[0].BANK_LOGO
+//								console.log(chooseCarPic.src)
+								chooseCarName.innerHTML = cardArr[0].AFFILIATED_BANK
+								chooseCarNum.innerHTML = cardArr[0].CARD_NUM
+							}
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						app.ajaxError(errorThrown)	
+					}
+				});
+
+//				点击选择其他银行卡
+				chooseCard.addEventListener('tap', function() {
+					mui('#sheet').popover('toggle');
+				}, false)
+
+//				点击其他银行选择
+				mui('body').on('tap', '.mui-popover-action li', function() {
+					var a = this,
+						parent;
+					//根据点击按钮，反推当前是哪个actionsheet
+					for(parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
+						if(parent.classList.contains('mui-popover-action')) {
+							break;
+						}
+					}
+					//关闭actionsheet
+					mui('#' + parent.id).popover('toggle');
+
+					var k = a.getAttribute('key')
+					var code = a.getAttribute('code')
+
+					if(k && code) {
+						chooseCarPic.src = app.baseUrl + cardArr[k].BANK_LOGO
+						chooseCarName.innerHTML = cardArr[k].AFFILIATED_BANK
+						chooseCarNum.innerHTML = cardArr[k].CARD_NUM
+
+						currCode = cardArr[k].CARD_CODE;
+					}
+				})
+
+//				提交操作
+				document.getElementById('submitBtn').addEventListener('tap', function() {
+					var _this=this
+					if(inputMoney.value.length <= 0 || inputMoney.value == 0) {
+						plus.nativeUI.toast('请输入金额');
+						return
+					}
+					if(!currCode) {
+						plus.nativeUI.toast('请先前往个人中心绑定银行卡');
+						return
+					}
+					mui.confirm('￥' + inputMoney.value, '提现金额至----'+chooseCarName.innerHTML, ['取消', '确定'], function(e) {
+						
+						if(e.index == 1) {
+							mui(_this).button('loading');
+							//					符合金额格式
+							mui.ajax(app.baseUrl + '/Data/api/Account/Withdraw', {
+								//			dataType:'json',//服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded',
+									'Authorization': tk
+								},
+								data: {
+									amount: inputMoney.value,
+									bankNum:currCode
+								},
+								success: function(data) {
+									mui(_this).button('reset');
+									if(!data.Success) {
+										mui.alert(data.Msg, '提现失败', function() {
+											inputMoney.value = 0
+										});
+									} else {
+										mui.alert('转出成功', function() {
+											plus.nativeUI.showWaiting('数据更新中')
+											plus.webview.getWebviewById('index').reload(true)																											
+											plus.webview.getWebviewById('qiyeBao').reload(true)
+											plus.webview.getWebviewById('product').reload(true)
+											plus.webview.getWebviewById('index').evalJS('tabInit(1)');
+											mui.later(function() {
+												plus.nativeUI.closeWaiting();
+												mui.back()
+											}, 1500)
+										})
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理；
+									mui(_this).button('reset');
+									app.ajaxError(errorThrown)	
+								}
+							});
+						} else {
+							return false
+						}
+					});
+				});
+			})
+		</script>
+	</body>
+
+</html>

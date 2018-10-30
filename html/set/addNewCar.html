@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>添加新卡</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav mui-clearfix subhead" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+			<h1 class="mui-title">添加新卡</h1>
+		</header>-->
+
+		<div class="mui-content " id="content">
+			
+			<!--输入卡号-->
+			<div class="addCar bg-w container ">
+				<p class="txt-l">请输入卡号：</p>
+				<div class="flex carNumBox mui-input-row">				
+					<div class="carNum f1">
+						<input type="text" class="mui-input-clear" name="carNum" id="carNum" placeholder="——————————" />
+					</div>
+					<!--<label for=""><i class="iconfont icon-jianhao "></i></label>-->
+				</div>
+				
+				<div class="lh2 ">					
+					<div class="mui-input-group">
+						<div class="flex lh2">
+							<p class="txt-l f1" style="line-height: 40px">所属银行：</p>
+							<p class="txt-r f2 " style="line-height: 40px;padding: 0 15px;" id="cardBelong">无</p>
+						</div>
+						<div class="flex">
+							<p class="txt-l " style="line-height: 40px;">持卡人:</p>
+							<input type="text" class="mui-input-clear f2 txt-r nm"  placeholder="请输入持卡人姓名" id="cardName">
+						</div>
+						<div class="">
+							 <div class="flex">
+							 	<p class="txt-l " style="line-height: 40px;">开户行:</p>
+							 	<input type="text" class="mui-input-clear f2 txt-r nm" placeholder="请输入开户行地址" id="cardPlace">
+							 </div>						
+						</div>
+					</div>
+				</div>
+			</div>	
+			<!--小提示-->
+			<div class="bank bg-w mui-clearfix cor_w">
+				<div class="pad10">
+					<p class="com_ti1 cor_b" style="margin: 15px auto;">小贴士提醒您：</p>
+				</div>
+				<div class="pad10 ">
+					<ul class="bank_node container">
+						<li class="txt-l cor_b flex">
+							<p class="txt-l cor_b">
+								<i class="iconfont   icon-zhanghuyichang  cor_b" ></i>银行卡必须是持卡人本人的储蓄卡，请勿使用信用卡；
+							</p>							
+						<li class="txt-l cor_b flex">
+							<p class="txt-l cor_b">
+								<i class="iconfont   icon-zhanghuyichang  cor_b" ></i>银行卡信息必须真实有效；
+							</p>							
+						</li>	
+						<li class="txt-l cor_b flex">
+							<p class="txt-l cor_b">
+								<i class="iconfont   icon-zhanghuyichang  cor_b" ></i>由于以上原因造成的财产损失，公司将不予承担。
+							</p>						
+						</li>	
+					</ul>				
+				</div>		
+			</div>	
+			
+			<!--确认添加操作-->
+			<div class="container">
+					<button class="mui-btn mui-btn-primary mui-btn-block " id="submit">提交绑定</button>	
+			</div>	
+	
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/bank.js"></script>
+		
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+				var wv = plus.webview.currentWebview();
+				wv.setStyle({
+					titleNView: {
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							}
+						}
+				});
+				
+				var numBtn=document.getElementById('carNum')
+				var cardName=document.getElementById('cardName')
+				var cardPlace=document.getElementById('cardPlace')
+				var cardBelong=document.getElementById('cardBelong')
+//				银行中文名，银行英文简称，脚本查询是否有效银行卡
+				var BankName,BankAb,validCar=false
+				
+//				点击选择银行
+				mui('.container').on('change', '#carNum', function(event) {
+					var val=numBtn.value.replace(/[^0-9-]+/,'')
+					numBtn.value=val
+					if( !rightCar() ){
+//						不正确的卡号
+						plus.nativeUI.toast('银行卡号格式不正确');
+						cardBelong.innerHTML='请输入正确19位卡号';
+						validCar=false
+					}else{
+//						卡号真确提交脚本查询
+						bank.getBankName(numBtn.value,function(status,ab,name){
+//							ab是返回的银行简称大写字母
+							if(status){
+								BankName=name;
+								BankAb=ab
+								cardBelong.innerText=name;
+								plus.nativeUI.toast('归属银行：'+name);
+								validCar=true
+							}else{
+								plus.nativeUI.toast("未知银行卡");
+								validCar=false
+							}					
+						})
+					}
+				})
+				
+//				提交绑定
+				mui('.container').on('tap', '#submit', function(event) {
+					if(!rightCar){
+						plus.nativeUI.toast('银行卡号格式不正确');
+						return 
+					}
+					if(!validCar){
+						plus.nativeUI.toast('无效的银行卡号，请核对后输入');
+						return 
+					}
+					if(!cardName.value||cardName.value.length<=0){
+						plus.nativeUI.toast('请填入持卡人姓名');	
+						return 
+					}
+					
+					if(!cardPlace.value||cardPlace.value.length<=0){
+
+						plus.nativeUI.toast('请填入开户行地址');	
+						return 
+					}
+					var reg = /^[\u4e00-\u9fa5]+$/gi; // 匹配汉字
+//						reg.test(cardPlace.value)
+//					校验汉字
+					if(!reg.test(cardPlace.value)){
+						plus.nativeUI.toast('开户行地址包含非法的字符');	
+						return 
+					}
+					
+					var _this=this
+					mui(_this).button('loading');
+//					提交绑定新卡信息
+					bank.addNewCard({
+						CARD_BANK:cardPlace.value,
+						CARD_NUM:numBtn.value,
+						AFFILIATED_BANK:BankName,
+						BANK_LOGO:BankAb
+					},function(status){
+						mui(_this).button('reset');
+						if(status){
+							mui.alert('点击返回银行卡页管理页面','银行卡添加成功',  function() {
+								var banks = plus.webview.getWebviewById('bank');
+								 banks.reload(true);  
+								 
+								var ws=plus.webview.currentWebview();
+								plus.webview.close(ws);	
+							});
+													
+						}else{
+							plus.nativeUI.toast('绑定失败');	
+						}
+					})
+					
+				})
+				
+//				校验卡号的正则
+				function rightCar(){
+					var num=numBtn.value;
+					var reg = /^([1-9]{1})(\d{15}|\d{18})$/; // 以19位数字开头，以19位数字结尾 
+					return reg.test(num)
+				}
+			})
+		</script>
+	</body>
+
+</html>

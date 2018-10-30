@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav mui-clearfix subhead" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+			<h1 class="mui-title">预约购买</h1>
+		</header>
+
+		<div class="mui-content main" id="content">
+			<!--产品基本信息-->
+			<div class="container bg-w ">
+				<article class="flex">
+					<div class="pic">
+						<img src="" alt="" width="100px" height="50px" id="prePic" />
+					</div>
+					<div class="f1">
+						<h4 class="txt-r " id="proName"> </h4>
+						<p class="txt-r">周期：<span id="procycle">0</span>天</p>
+					</div>
+				</article>
+			</div>
+			<p class="cor_b xs lh2">该操作将会从企业宝扣款!</p>
+			<!--输入金额-->
+			<div class="depositBox paymentBox">
+				<div class="depositBox_top ">
+					<p class="txt-l">转入金额:</p>
+					<article class="moneyBox flex">
+						<p class="f1 txt-r">￥</p>
+						<div class="f1 txt-l">
+							<input type="text" id="inputMoney" name="" value="0" max="0" />
+						</div>
+					</article>
+					<aside class="flex">
+						<p class="txt-l">企业宝余额：<span id="allAmount">0</span></p>
+						<p class="txt-r cor_b" id="allIn">全部投入购买</p>
+					</aside>
+				</div>
+			</div>
+
+			<!--小贴士提示-->
+			<div>
+				<form class=" no-bd bg-w">
+					<div class="mui-input-row mui-checkbox mui-left ">
+						<label class="txt-l time" style="margin-top: -8px;">同意相关协议，并同意相关信息变更，本人知晓该产品年化收益率不代表任何收益承诺</label>
+						<input name="radio1" type="checkbox" id="isAgree" checked>
+					</div>
+				</form>
+			</div>
+
+			<!--预约-->
+			<div class="container">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block " id="toBuy">预约购买</button>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+
+				app.initHeader();
+				app.createPage();
+
+				//				默认同意协议
+				var isAgree = true;
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				//				上级页面的传值--金额
+				var amount = self.amount;
+				//				上级页面的传值--项目名称				
+				var proName = self.proName;
+				//				上级页面的传值--周期							
+				var procycle = self.procycle;
+				//				上级页面的传值--项目id				
+				var proId = self.proId
+				//				上级页面的传值--预览图地址				
+				var prePic = self.prePic
+				//				企业宝余额
+				var qybAmount = self.qybAmount
+
+				//	金额输入框
+				var inputMoney = document.getElementById('inputMoney')
+				//				产品名字
+				var proNameDom = document.getElementById('proName')
+				//				周期
+				var procycleDom = document.getElementById('procycle')
+
+				var tk = app.getState().token;
+				//				全部存入
+				var allIn = document.getElementById('allIn')
+				//				全部金额
+				var allAmount = document.getElementById('allAmount')
+
+				//				input标签上的最大余额数
+				inputMoney.max = qybAmount
+				//				项目信息	
+				document.getElementById('prePic').src = prePic
+				proNameDom.innerText = proName
+				procycleDom.innerText = procycle
+				allAmount.innerText = qybAmount
+
+				//				首次进入的时候判断是否金额大于最大余额
+				if(amount > qybAmount) {
+					plus.nativeUI.toast('余额不足');
+					inputMoney.value = 0
+				} else {
+					inputMoney.value = amount
+				}
+
+				//				协议是否同意
+				mui('.mui-input-row').on('change', '#isAgree', function() {
+					isAgree = !isAgree
+				});
+
+				//				点击预约购买
+				mui('.container').on('tap', '#toBuy', function() {
+
+					if(!isAgree) {
+						mui.alert('请您务必先阅读相关协议并同意', '小贴士提醒您', function() {});
+						return false
+					}
+					if(inputMoney.value.length <= 0 || inputMoney.value == 0) {
+						plus.nativeUI.toast('请输入金额');
+						return
+					}
+					var _this = this
+
+					mui.confirm('您确定要预约购买该项目？', '预约确认', ['取消', '确定'], function(e) {
+						//						用户点击确认提交操作
+
+						if(e.index == 1) {
+							mui(_this).button('loading');
+							mui.ajax(app.baseUrl + '/Data/api/Product/BuyPorductSubmit', {
+								//								dataType:'json',//服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded',
+									'Authorization': tk
+								},
+								data: {
+									amount: inputMoney.value,
+									PRODUCT_CODE: proId
+								},
+								success: function(data) {
+									mui(_this).button('reset');
+									if(!data.Success) {
+										//										预约失败
+											mui.alert(data.Msg, '购买失败', function() {
+												inputMoney.value = 0
+											});
+
+									} else {
+										mui.alert('购买成功', function() {
+											plus.nativeUI.showWaiting('数据更新中')
+											plus.webview.getWebviewById('index').reload(true)
+
+											plus.webview.getWebviewById('qiyeBao').reload(true)
+											plus.webview.getWebviewById('product').reload(true)
+											mui.later(function() {
+												plus.nativeUI.closeWaiting();
+												plus.webview.getWebviewById('index').evalJS('tabInit(3)');
+												mui.back()
+											}, 1500)
+										})
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理；
+									mui(_this).button('reset');
+									app.ajaxError(errorThrown)
+								}
+							});
+						}
+					});
+				})
+
+				//				全部金额allIn
+				mui('.paymentBox').on('tap', '#allIn', function() {
+
+					var inputMoney = document.getElementById('inputMoney')
+					if(inputMoney) {
+						inputMoney.value = Math.floor(allAmount.innerText)
+					}
+				});
+			})
+		</script>
+	</body>
+
+</html>

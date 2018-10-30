@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>基本信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+		<style></style>
+	</head>
+
+	<body>
+		<script id="psMsg" type="text/template">
+			<!--<header id="header" class="mui-bar mui-bar-transparent" style="background-color: rgba(44, 137, 207, 0)">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+				<h1 class="mui-title">{{STAFF_NAME}}</h1>
+			</header>-->
+
+			<div class="mui-content  main">
+				<div class="" id="content" style="background: #2786ca;">
+					<div class="personavaterBox"  id="changeAvatar">
+						<img src={{baseUrl+STAFF_IMG}} alt="" id="personavater" />
+					</div>
+					
+					<div class="personmenu flex container no-bg">
+						<!--<p class="txt-l cor_w" id="changeAvatar">
+							<i class="iconfont icon-yonghu-"></i> 点击更换头像
+						</p>-->
+						<p class="txt-r cor_w" id="toscore">
+							查看积分规则
+							<i class="mui-icon mui-icon-help"></i>
+						</p>
+					</div>
+				</div>
+
+				<ul class="mui-table-view ">
+					<li class="mui-table-view-cell flex">
+						<article class=" txt-l f1 flex ">
+							<i class="iconfont icon-jifen sm"></i>
+							<p class="txt-l f1 mrl sm cor_txt">当前积分</p>
+						</article>
+						<aside class="f1 AssetsBotlist_txt txt-r">{{INTEGRAL.IntegralNum}}</aside>
+					</li>
+					<li class="mui-table-view-cell flex">
+						<article class=" txt-l f1 flex ">
+							<i class="iconfont icon-qiyeweifaxinxi sm"></i>
+							<p class="txt-l f1 mrl sm cor_txt">员工编号</p>
+						</article>
+						<aside class="f1 AssetsBotlist_txt txt-r">{{STAFF_NUM}}</aside>
+					</li>
+					<li class="mui-table-view-cell flex">
+						<article class=" txt-l f1 flex ">
+							<i class="iconfont icon-shouji sm"></i>
+							<p class="txt-l f1 mrl sm cor_txt">手机号码</p>
+						</article>
+						<aside class="f1 AssetsBotlist_txt txt-r">{{STAFF_MOBILE}}</aside>
+					</li>
+					<li class="mui-table-view-cell flex">
+						<article class=" txt-l f1 flex">
+							<i class="iconfont icon-xingbie1 sm"></i>
+							<p class="txt-l f1 mrl sm cor_txt">性别</p>
+						</article>
+						<aside class="f1 AssetsBotlist_txt txt-r">{{STAFF_SEX}}</aside>
+					</li>
+					<li class="mui-table-view-cell flex">
+						<article class=" txt-l f1 flex">
+							<i class="iconfont icon-zhiwei sm"></i>
+							<p class="txt-l f1 mrl sm cor_txt">员工职位</p>
+						</article>
+						<aside class="f1 AssetsBotlist_txt txt-r">{{POST_NAME}}</aside>
+					</li>
+					<li class="mui-table-view-cell flex">
+						<article class=" txt-l f1 flex">
+							<i class="iconfont icon-bumenguanli sm"></i>
+							<p class="txt-l f1 mrl sm cor_txt">所在部门</p>
+						</article>
+						<aside class="f1 AssetsBotlist_txt txt-r">{{DEPT_NAME}}</aside>
+					</li>
+					<li class="mui-table-view-cell flex">
+						<article class=" txt-l f1 flex">
+							<i class="iconfont icon-gongsixinxi sm"></i>
+							<p class="txt-l f1 mrl sm cor_txt">公司单位</p>
+						</article>
+						<aside class="f1 AssetsBotlist_txt txt-r">{{COMPANY_NAME}}</aside>
+					</li>
+				</ul>
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/arttemp.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+
+				var tk = app.getState().token;
+//				储存用户的性别
+				var userSex
+				var wv = plus.webview.currentWebview();
+				wv.setStyle({
+					titleNView: {
+//						type:'transparent',
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							}
+						}
+				});
+				
+				
+				//				页面加载个人相关信息
+				mui.ajax(app.baseUrl + '/Data/api/Account/GetUserAccount', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+						//							console.log(data.Success)
+						if(data.Success) {
+							var list = data.Data
+							list.baseUrl = app.baseUrl
+							//								console.log(list.ListInfo.length)	
+							var html = template('psMsg', list);
+							document.body.innerHTML = html;
+							
+							userSex=data.Data.STAFF_SEX
+//							app.initHeader();
+//							app.createPage();
+							
+							
+
+							//				点击跳转用户头像页面
+							document.getElementById('changeAvatar').addEventListener('tap', function() {
+								mui.openWindow({
+									url: './avatars.html',
+									id: 'avatars',
+									styles: {
+										top: '0px', //新页面顶部位置
+										bottom: '0px', //新页面底部位置
+										scrollIndicator: "none",
+										plusrequire: 'ahead'
+									},
+									createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+									show: {
+										autoShow: false, //页面loaded事件发生后自动显示，默认为true
+										duration: 300 //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+									},
+									extras: {
+										sex:userSex
+									},
+									waiting: {
+										autoShow: true, //自动显示等待框，默认为true
+										title: '正在加载...', //等待对话框上显示的提示内容
+									}
+								})
+							})
+							document.getElementById('toscore').addEventListener('tap',function(){
+								app.jumpPage('../zh/score.html','score')
+							})
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						app.ajaxError(errorThrown)
+					}
+				});
+
+			})
+		</script>
+	</body>
+
+</html>

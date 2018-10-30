@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+	</head>
+
+	<body>
+		<!--头部-->
+		<header id="header" class="mui-bar mui-bar-transparent" style="background-color: rgba(44, 137, 207, 0)">
+			<h1 class="mui-title" style="">个人中心</h1>
+		</header>
+		<div class="mui-content main">
+			<!--总资产信息-->
+			<div class="AssetsMsgBox" id="content">
+				<div class="personavaterBox">
+						<img src={{baseUrl+STAFF_IMG}} alt="" id="personavater" />
+				</div>
+				<div class="personmenu flex container no-bg">
+					</div>
+			</div>
+
+			<!--信息部分1-->
+			<ul class="mui-table-view personset">
+			
+				<li class="mui-table-view-cell ">
+					<a class="txt-l">
+						<i class=" iconfont  icon-jifen personicon"></i>当前积分
+						<span class=" mui-pull-right" id="nowScore">
+							0
+						</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell ">
+					<a class=" txt-l">
+						<i class=" iconfont  icon-dengji personicon"></i>当前等级
+						<span class=" mui-pull-right" id="nowLevel">
+							普通会员
+						</span>
+					</a>
+				</li>
+				<!--<li class="mui-table-view-cell ">
+					<a class=" txt-l">
+						<i class=" iconfont  icon-shezhi- personicon"></i>当前版本
+						<span class=" mui-pull-right" id="nowversion">
+							
+						</span>
+					</a>
+				</li>-->
+			</ul>
+
+			<!--信息部分2-->
+
+			<ul class="mui-table-view personset">
+				<li class="mui-table-view-cell ">
+					<a class="mui-navigate-right txt-l a" href="bank.html" hid="bank">
+						<p class=" txt-l sm cor_b"><i class=" iconfont  icon-chongzhi- personicon"></i>银行卡</p>
+					</a>
+				</li>
+				<li class="mui-table-view-cell ">
+					<a class="mui-navigate-right txt-l a" href="personMsg.html" hid="personMsg">
+						<p class=" txt-l sm cor_b"><i class=" iconfont  icon-yonghu-  personicon"></i>个人信息</p>
+					</a>
+				</li>
+				<li class="mui-table-view-cell ">
+					<a class="mui-navigate-right txt-l a" href="./msgcenter.html" hid="msgcenter">
+						<p class=" txt-l sm cor_b"><i class=" iconfont  icon-dengji-  personicon"></i>消息中心</p>
+					</a>
+				</li>
+				<!--<li class="mui-table-view-cell ">
+					<a class="mui-navigate-right txt-l" href="updatedPass.html" hid="updatedPass">
+						<p class=" txt-l sm cor_b"><i class=" iconfont  icon-xiugaimima personicon"></i>修改密码</p>
+					</a>
+				</li>-->
+			</ul>
+
+			<!--信息部分3-->
+			<ul class="mui-table-view personset">
+				<li class="mui-table-view-cell txt-l">
+					<i class=" iconfont  icon-denglu1 personicon"></i> 用户自动登录
+					<div class="mui-switch mui-switch-mini " id="autoLogin">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<!--<li class="mui-table-view-cell txt-l">
+					<i class=" iconfont  icon-tuisongxiaoxi personicon"></i> 新品消息推送
+					<div class="mui-switch  mui-switch-mini mui-active">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>-->
+				<!--<li class="mui-table-view-cell txt-l">
+					<i class=" iconfont  icon-jiaoyijilu personicon"></i> 交易结果通知
+					<div class="mui-switch  mui-switch-mini ">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>-->
+			</ul>
+			<div class="container no-bg">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block " id="loginOut">安全退出</button>
+			</div>
+
+		</div>
+		<script src="../../js/mui.min.js"></script>
+
+		<script src="../../js/app.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+				keyEventBind: {
+					backbutton: false, //Boolean(默认true)关闭back按键监听
+					menubutton: false //Boolean(默认true)关闭menu按键监听
+				},
+			})
+
+			mui.plusReady(function() {
+				app.initHeader();
+				
+				//隐藏滚动条				
+				plus.webview.currentWebview().setStyle({scrollIndicator:'none'});	
+				var tk = app.getState().token;
+//				安全退出按钮
+				var loginOut = document.getElementById('loginOut');
+//				自动登陆按钮
+				var autoLoginButton = document.getElementById("autoLogin");
+//				获取全局设置
+				var settings = app.getSettings();
+//				头像结点
+				var personavatar = document.getElementById('personavater');
+//				当前积分
+				var nowScore = document.getElementById('nowScore');
+//				当前等级
+				var nowLevel = document.getElementById('nowLevel');
+				
+//				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+//					document.getElementById('nowversion').innerText ='V'+inf.version;
+//				});
+				
+//				首次加载获取积分信息
+				mui.ajax(app.baseUrl + '/Data/api/Account/GetUserAccount', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+						//console.log(data.Success)
+						if(data.Success) {
+							personavatar.src= app.baseUrl+data.Data.STAFF_IMG;
+//							console.log(app.baseUrl+data.Data.STAFF_IMG)
+							nowScore.innerHTML=data.Data.INTEGRAL.IntegralNum;
+							nowLevel.innerHTML=data.Data.INTEGRAL.LevelName		
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+
+//				用户自动登陆的设置
+				autoLoginButton.classList[settings.autoLogin ? 'add' : 'remove']('mui-active')
+				autoLoginButton.addEventListener('toggle', function(event) {
+					setTimeout(function() {
+						var isActive = event.detail.isActive;
+						settings.autoLogin = isActive;
+						app.setSettings(settings);
+						plus.nativeUI.toast(isActive?'开启自动登陆':'取消自动登陆');
+					}, 50);
+				}, false);
+
+//				用户安全退出
+				loginOut.addEventListener('tap', function(event) {
+					mui.confirm('安全退出后需要重新登录，确定退出么？', '小贴士提醒您', ['取消','确定'], function(e) {
+						//	确定退出
+//						alert(e.index)
+						if(e.index == 1) {
+//							alert(2)
+							plus.nativeUI.showWaiting('清除登陆信息中...');
+							
+							//		清空token
+							app.resetState();
+												
+							mui.later(function(){
+								plus.nativeUI.closeWaiting();
+								plus.nativeUI.toast('安全退出成功');
+
+								var root=plus.webview.getLaunchWebview();
+								root.show("pop-in", 300, function() {
+									
+									root.evalJS('refreshIndex()');
+								}, {});
+//								alert(3)
+							},1500)
+							//		跳转登陆页重新登录
+												
+						}else {
+								return false
+						}
+					})
+
+				})
+
+			})
+		</script>
+	</body>
+
+</html>

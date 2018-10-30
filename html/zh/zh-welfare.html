@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>福利特权</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav mui-clearfix subhead" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+			<h1 class="mui-title">福利特权</h1>
+			<a  class="mui-pull-right" style="line-height: 44px;" id="explain">特权说明</a>
+		</header>-->
+
+		<div class="mui-content" id="content">
+			
+			<!--当前特权-->
+			<div class="mywelfare">
+				<div class="pad10"><p class="com_ti1" style="margin: 15px auto;">当前特权</p></div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right txt-l"><i class="mui-icon mui-icon-plusempty"></i>孕假</a>
+						<div class="mui-collapse-content">
+							<div class="mywelfare-lis">
+								<p class="txt-l">当前福利详细：</p>
+								<p class="txt-r cor_sky">可申请假期30天</p>
+							</div>
+							<div class="mywelfare-lis">
+								<p class="txt-l">下一等级详细：</p>
+								<p class="txt-r cor_sky">可申请假期40天</p>
+							</div>
+						</div>
+					</li>
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right txt-l"><i class="mui-icon mui-icon-plusempty"></i>孕假</a>
+						<div class="mui-collapse-content">
+							<div class="mywelfare-lis">
+								<p class="txt-l">当前福利详细：</p>
+								<p class="txt-r cor_sky">可申请假期30天</p>
+							</div>
+							<div class="mywelfare-lis">
+								<p class="txt-l">下一等级详细：</p>
+								<p class="txt-r cor_sky">可申请假期40天</p>
+							</div>
+						</div>
+					</li>
+					<li class="mui-table-view-cell  mui-collapse">
+						<a class="mui-navigate-right txt-l"><i class="mui-icon mui-icon-plusempty"></i>孕假</a>
+						<div class="mui-collapse-content">
+							<div class="mywelfare-lis">
+								<p class="txt-l">当前福利详细：</p>
+								<p class="txt-r cor_sky">可申请假期30天</p>
+							</div>
+							<div class="mywelfare-lis">
+								<p class="txt-l">下一等级详细：</p>
+								<p class="txt-r cor_sky">可申请假期40天</p>
+							</div>
+						</div>
+					</li>
+				</ul>			
+			</div>		
+			
+				
+			<!--下一级特权-->
+			<div class="nextwelfare">
+				<div class="pad10"><p class="com_ti1" style="margin: 15px auto;">下一级特权</p></div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell ">
+						<p class=" txt-l"><i class="mui-icon mui-icon-plusempty"></i>孕假</p>
+					</li>
+					<li class="mui-table-view-cell ">
+						<p class=" txt-l"><i class="mui-icon mui-icon-plusempty"></i>孕假</p>
+					</li>
+				</ul>			
+			</div>		
+		
+			<!--福利券使用-->
+			<div class="voucher">
+				<div class="pad10"><p class="com_ti1" style="margin: 15px auto;">下一级特权</p></div>
+				<ul>
+					<li class="voucher_lis">
+						<a >
+							<aside class="voucher_lis_pics">
+								<img src="../../img/528d8f85a7cf08d659cb8dfb832d1495.png"/>
+								<p>请假券</p>
+							</aside>
+							<div>
+								请假福利券
+							</div>
+							<article>
+								去使用
+								<i class="mui-icon mui-icon-arrowright"></i>
+							</article>
+						</a>	
+					</li>
+					<li class="voucher_lis">
+						<a >
+							<aside class="voucher_lis_pics">
+								<img src="../../img/528d8f85a7cf08d659cb8dfb832d1495.png"/>
+								<p>请假券</p>
+							</aside>
+							<div>
+								请假福利券
+							</div>
+							<article>
+								去使用
+								<i class="mui-icon mui-icon-arrowright"></i>
+							</article>
+						</a>	
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+
+		<script src="../../js/app.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+
+//				app.initHeader();
+//				app.createPage();	
+				var wv = plus.webview.currentWebview();
+				wv.setStyle({
+					titleNView: {
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							}
+						}
+				});
+//预加载全屏子页面				
+//				app.fullprePage('./score.html','score');
+				app.fullprePage('./use-welfare.html','use-welfare');
+				
+				var explain=document.getElementById('explain')
+				
+//显示积分规则
+//				explain.addEventListener('tap',function(){
+//					plus.webview.getWebviewById('score').show()
+//				},false)
+//跳转福利券使用
+				mui('.voucher').on('tap','.voucher_lis',function(){
+						plus.webview.getWebviewById('use-welfare').show()
+				})
+				
+			})
+		</script>
+	</body>
+
+</html>

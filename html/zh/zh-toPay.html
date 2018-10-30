@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>充值金额</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body style="background:#60bae6!important;">
+		<!--<header class="mui-bar mui-bar-nav mui-clearfix " style="background:#60bae6 ;" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+			<h1 class="mui-title">充值金额</h1>
+		</header>-->
+
+		<div class="mui-content no-bg container" id="content">
+			<p class=" xs deposit_node" style="color: #fbe79a;">该操作您将充值金额至个人账户</p>
+			<div class="depositBox extract">
+				<div class="depositBox_top">
+					<p class="txt-l">充值金额:</p>
+					<article class="moneyBox flex">
+						<p class="txt-r">￥</p>
+						<div class="f1 txt-l">
+							<input type="text" id="inputMoney" name="" value="" />
+						</div>
+					</article>
+				</div>
+			</div>
+			<!--<div class="flex">
+				<div class="mui-input-row mui-radio mui-left">
+					<label class="color:#fff">微信</label>
+					<input name="radio1" type="radio">
+				</div>
+				<div class="mui-input-row mui-radio mui-left">
+					<label class="color:#fff">支付宝</label>
+					<input name="radio1" type="radio">
+				</div>
+			</div>-->
+			<div style="margin-top:20px">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block " id="weixin"> 微信支付</button>
+			</div>
+			<div style="margin-top:20px">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block " id="zhifubao"> 支付宝支付</button>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+//				alert(1111)
+				var wxChannel = null; // 微信支付 
+				var aliChannel = null; // 支付宝支付 
+				var channel = null; //支付通道 
+				
+				var wv = plus.webview.currentWebview();
+				wv.setStyle({
+					titleNView: {
+//							type:'transparent',
+					
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#60bae6", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#60bae6", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							}
+						}
+				});
+				
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				var tk = app.getState().token;
+				//				金额输入框
+				var inputMoney = document.getElementById('inputMoney')
+				//				提交操作
+				var submitBtn = document.getElementById('submitBtn')
+
+				plus.payment.getChannels(function(channels) {
+					for(var i in channels) {
+						if(channels[i].id == "alipay") {
+										aliChannel = channels[i];
+									}
+									if(channels[i].id == "wxpay") {
+										wxChannel = channels[i];
+									}
+					}
+				}, function(e) {
+					alert( " 获取支付通道失败： " + e.message);
+				});
+
+				document.getElementById('weixin').addEventListener('tap', function() {
+					console.log( 'wx');
+					pay('wxpay');
+				})
+				document.getElementById('zhifubao').addEventListener('tap', function() {
+//					console.log( 'zfb');
+					pay('alipay');
+				})
+
+				var ALIPAYSERVER = app.baseUrl +"/Data/api/Pay/CreateAlipayAppPay?subject=111&body=sadf&money=0.1";
+				var WXPAYSERVER = 'http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?money=0.1&body="测试产品"';
+
+				// 2. 发起支付请求 
+				function pay(id) {
+					// 从服务器请求支付订单 
+					var PAYSERVER = '';
+					if(id == 'alipay') {
+						PAYSERVER = ALIPAYSERVER;
+						channel = aliChannel;
+					} else if(id == 'wxpay') {
+						PAYSERVER = WXPAYSERVER;
+						channel = wxChannel;
+					} else {
+						plus.nativeUI.alert( ' 不支持此支付通道！ ', null, ' 充值 ');
+						return;
+					}
+					var xhr = new XMLHttpRequest();
+					var amount = inputMoney.value;
+
+					xhr.onreadystatechange = function() {
+						switch(xhr.readyState) {
+							case 4:
+								if(xhr.status == 200) {
+									
+//									console.log(xhr.responseText)
+									plus.payment.request(channel,  JSON.parse(xhr.responseText).Data, function(result) {
+										
+										plus.nativeUI.alert( " 支付成功！ ", function() {
+//											back();
+										});
+									}, function(error) {
+										plus.nativeUI.alert( " 支付失败： " + error.code);
+									});
+								} else {
+									alert( " 获取订单信息失败！ ");
+								}
+								break;
+							default:
+								break;
+						}
+					}
+					xhr.open('POST', PAYSERVER );
+										
+					xhr.send();
+				}
+
+				//				提交操作
+//				submitBtn.addEventListener('tap', function() {
+//					var _this = this
+//					if(inputMoney.value.length <= 0 || inputMoney.value == 0) {
+//						plus.nativeUI.toast('请输入金额');
+//						return
+//					}
+//
+//					mui.confirm('￥' + inputMoney.value, '确认转出金额？', ['取消', '确定'], function(e) {
+//						if(e.index == 1) {
+//							mui(_this).button('loading');
+//							//					符合金额格式
+//							mui.ajax(app.baseUrl + '/Data/api/QybAccount/TransferOut', {
+//								//			dataType:'json',//服务器返回json格式数据
+//								type: 'post', //HTTP请求类型
+//								timeout: 10000, //超时时间设置为10秒；
+//								headers: {
+//									'Content-Type': 'application/x-www-form-urlencoded',
+//									'Authorization': tk
+//								},
+//								data: {
+//									amount: inputMoney.value
+//								},
+//								success: function(data) {
+//									//								
+//
+//								},
+//								error: function(xhr, type, errorThrown) {
+//									mui(_this).button('reset');
+//									//异常处理；
+//									app.ajaxError(errorThrown)
+//								}
+//							});
+//
+//						} else {
+//							return false
+//						}
+//					});
+//
+//				});
+
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,280 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body>
+
+		<script id="productsTmp" type="text/template">
+			<header class="mui-bar mui-bar-nav mui-clearfix subhead" id="header">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+				<h1 class="mui-title">{{detailInfo.PRODUCT_NAME}}</h1>
+				<!--<a  class="mui-pull-right" style="line-height: 44px;" id="explain"></a>-->
+			</header>
+
+			<div class="mui-content main" id="content">
+				<!--产品基本信息-->
+				<div class="purchase pad10 bg-w">
+					<article class="flex">
+						<div class="f1">
+							<h3 class="cor_o "><span class="">{{detailInfo.RATE_VALUE}}</span>%</h3>
+							<p>年化利率</p>
+						</div>
+						<div class="f1">
+							<h3 class=""><span class="">{{detailInfo.PRODUCT_LIFE}}</span>天</h3>
+							<p>产品周期</p>
+						</div>
+					</article>
+					<aside>
+						{{each detailInfo.PRODUCT_MARK value i}}
+						<span class="active">{{value}}</span> {{/each}}
+					</aside>
+				</div>
+
+				<!--项目状态-->
+				<div class="purchase pad10 bg-w mrt">
+					<p class="lh2 txt-l">
+						购买开放时间: <span class="fr">{{detailInfo.BUY_START_DATE}}</span> 
+					</p>
+					<p class="lh2 txt-l">
+						购买截至时间:<span class="fr">{{detailInfo.BUY_END_DATE}}</span>
+					</p>
+					<p class="lh2 txt-l">
+						项目状态:<span class="fr">{{statusTxt }}</span>
+					</p>
+					<p class="lh2 txt-l">
+						利息模式:<span class="fr">{{detailInfo.PRODUCT_TYPE==0?'单利':'复利'}}</span>
+					</p>
+				</div>
+
+				<!--交易规则-->
+				<div class=" pad10 mui-clearfix bg-w mrt">
+					<div class="pad10">
+						<p class="com_ti1" style="margin: 15px auto;">交易规则</p>
+					</div>
+					<div class="purchaserule">
+						<aside class="flex">
+							<p class="f1 lh2">
+								预约购买
+							</p>
+							<p class="f1 lh2">
+								成功购买
+							</p>
+							<p class="f1 lh2">
+								产生收益
+							</p>
+							<p class="f1 lh2">
+								到期
+							</p>
+						</aside>
+						<article class="flex">
+							<p class="time f1 lh2">
+								今日
+							</p>
+							<p class="time f1 lh2">
+								12小时内
+							</p>
+							<p class="time f1 lh2">
+								{{detailInfo.RATE_START_DATE.split(' ')[0]}}
+							</p>
+							<p class="time f1 lh2">
+								{{detailInfo.RATE_END_DATE.split(' ')[0]}}
+							</p>
+						</article>
+					</div>
+					<ul class="purchaseruleList">
+						<li class="txt-l flex">
+							<i class="iconfont   icon-zhanghuyichang  cor_b"></i>
+							<p class="txt-l time f1">预约申请期间的，涉及的金额会被冻结，交易成功后会被扣除</p>
+						</li>
+						<li class="txt-l flex">
+							<i class="iconfont   icon-zhanghuyichang  cor_b"></i>
+							<p class="txt-l time f1">购买金额从企业宝中扣除，并且不享受企业宝的日息增值</p>
+						</li>
+					</ul>
+				</div>
+
+				<!--收计算器-->
+				<div class="container mrt bg-w depositBox">
+					<div class="depositBox_top">
+						<p class="txt-l">模拟购买金额:</p>
+						<article class="moneyBox ">					
+								<div class="moneyMiddleBox">
+									<p class="">￥</p>
+									<p  id="inputMoney" class="">0</p>
+								</div>
+						</article>
+						<div class="flex " style="padding-top: 10px;">
+								<div class="f1 txt-l">0</div>
+								<div class="f1 txt-r">20000</div>
+						</div>
+						<div class="mui-input-row mui-input-range">
+							<input type="range" min="0" max="20000" id="range" value="0">
+						</div>
+						
+					</div>
+					<article class="flex ">
+						<div class="f1">
+							<p class="cor_o md lh15"><span id="earnings">0</span>元</p>
+							<p class="time">预期收益</p>
+						</div>
+						<!--<div class="f1">
+							<p class="cor_o md lh15"><span id="mountEarnings">0</span>元</p>
+							<p class="time">平均月息计算</p>
+						</div>-->
+					</article>
+				</div>
+
+				<!--预约购买-->
+				<div class="container">
+					<button class='mui-btn mui-btn-primary mui-btn-block ' id="order" >预约购买</button>					
+				</div>
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/arttemp.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				var receiveID = self.pId; //接收A页面传入的id参数值
+//				企业宝余额
+				var  qybAmount=self.qybAmount
+//				alert(qybAmount)
+//				当前项目的预览图地址
+				var prePic=self.preUrl;								
+				var tk = app.getState().token;
+
+//				当前项目					
+				var currPro
+				
+				
+//			获取项目的详情
+				mui.ajax(app.baseUrl + '/Data/api/Product/GetPorduct', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data: {
+						'PRODUCT_CODE': receiveID
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+
+						if(data.Success) {
+							var list = {
+								baseUrl: app.baseUrl,
+								detailInfo: data.Data
+							};
+
+							currPro=data.Data
+							
+//							项目状态文字
+							list.statusTxt=(function(t){
+								t=parseInt(t)
+								switch (t){
+									case 0:
+									return '未上线'
+										break;
+									case 1:
+									return '上线'
+										break;
+									case 2:
+									return '成交'
+										break;
+									case 3:
+									return '到期'
+										break;
+									case 4:
+									return '下架'
+										break;								
+								}							
+							}(data.Data.PRODUCT_STATUS))
+							
+							var html = template('productsTmp', list);
+							document.body.innerHTML = html;
+							
+//							此页面需要等dom全部加载后才可以初始化
+							app.initHeader();
+							app.createPage();
+							
+//							监听输入的滑块金额 
+							document.getElementById('range').addEventListener('input',function(){
+				                document.getElementById('inputMoney').innerHTML = this.value;
+//				                日息计算
+								document.getElementById('earnings').innerHTML = app.planInterest(this.value,currPro.RATE_VALUE,currPro.PRODUCT_LIFE)
+//						月息计算
+//								document.getElementById('mountEarnings').innerHTML = app.mount_Interest(this.value,currPro.RATE_VALUE)	                
+				       		});	
+				       		
+				       		
+//				       		监听预约购买的按钮
+				       		mui('.container').on('tap','#order',function(){
+//								判断是否输入金额为0
+//								var num=parseInt(document.getElementById('amount').innerHTML)
+								
+								if(currPro.PRODUCT_STATUS!=1){
+									mui.alert('该产品不在‘上线’状态，暂不可购买','小贴士提醒您',  function() {});
+									return false
+								}
+								
+								mui.openWindow({
+									url: './payment.html',
+									id: 'payment',
+									styles: {
+										top: '0px', //新页面顶部位置
+										bottom: '0px', //新页面底部位置
+										scrollIndicator: "none",
+										plusrequire: 'ahead'
+									},
+									createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+									show: {
+										autoShow: false, //页面loaded事件发生后自动显示，默认为true
+										duration: 300 //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+									},
+									extras: {
+										amount: inputMoney.innerHTML,
+										proName:currPro.PRODUCT_NAME,
+										procycle:currPro.PRODUCT_LIFE,
+										proId:receiveID,
+										prePic:prePic,
+										qybAmount:qybAmount
+									},
+									waiting: {
+										autoShow: true, //自动显示等待框，默认为true
+										title: '正在加载...', //等待对话框上显示的提示内容
+									}
+								})				
+				       			
+				       		})
+				       		
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						app.ajaxError(errorThrown)	
+					}
+				});
+//				console.log(rangeButton)
+				//			滑块事件监听	
+				
+			})
+		</script>
+	</body>
+
+</html>

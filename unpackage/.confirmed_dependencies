@@ -1,0 +1,210 @@
+{
+  "index.html": {
+    "resources": [
+      "html/news.html"
+    ],
+    "refer": [
+      "html/news.html",
+      "html/mine.html",
+      "html/home.html",
+      "html/interest.html",
+      "html/payments.html",
+      "html/wages.html",
+      "html/projects.html",
+      "html/register.html",
+      "html/score.html",
+      "html/zh-profit.html",
+      "html/zh-balance.html",
+      "html/zh-welfare.html",
+      "html/zh-extract.html",
+      "html/qiyeBao.html"
+    ]
+  },
+  "html/mine.html": {
+    "refer": [
+      "html/login.html",
+      "login.html"
+    ],
+    "resources": [
+      "js/app.js",
+      "img/i1.png",
+      "img/i2.png",
+      "img/i4.png",
+      "img/i3.png"
+    ]
+  },
+  "html/login.html": {
+    "refer": [
+      "html/register.html"
+    ],
+    "resources": []
+  },
+  "login.html": {
+    "refer": [
+      "index.html",
+      "html/zh/index.html",
+      "forget.html"
+    ],
+    "resources": []
+  },
+  "html/projects.html": {
+    "resources": [
+      "img/banner-5.jpg",
+      "img/banner-4.jpg"
+    ],
+    "refer": []
+  },
+  "html/wages.html": {
+    "resources": [
+      "js/echarts-all.js"
+    ],
+    "refer": []
+  },
+  "html/zh-welfare.html": {
+    "refer": [
+      "html/use-welfare.html",
+      "html/score.html"
+    ],
+    "resources": []
+  },
+  "html/use-welfare.html": {
+    "refer": [
+      "html/zh-welfare.html"
+    ],
+    "resources": []
+  },
+  "html/score.html": {
+    "refer": [
+      "html/zh-welfare.html"
+    ],
+    "resources": []
+  },
+  "html/zh/index.html": {
+    "refer": [
+      "html/qyb/qiyeBao.html",
+      "html/mine.html",
+      "html/projects.html",
+      "html/zh/zh-extract.html",
+      "html/zh/zh-welfare.html",
+      "html/zh/zh-balance.html",
+      "html/zh/zh-profit.html",
+      "html/zh/score.html",
+      "html/set/set.html",
+      "html/cp/projects.html",
+      "html/cp/product.html",
+      "html/zh/demo.html",
+      "html/zh/zh-profit-2.html",
+      "html/zh/zh-toPay.html"
+    ],
+    "resources": [
+      "fonts/mui.ttf"
+    ]
+  },
+  "html/zh/zh-welfare.html": {
+    "refer": [
+      "html/zh/use-welfare.html"
+    ],
+    "resources": []
+  },
+  "html/qyb/qiyeBao.html": {
+    "refer": [
+      "html/qyb/qyb-balance.html",
+      "html/qyb/qyb-profit.html",
+      "html/qyb/qyb-in.html",
+      "html/qyb/qyb-out.html",
+      "html/qyb/rule.html"
+    ],
+    "resources": []
+  },
+  "html/qyb/qyb-balance.html": {
+    "refer": [
+      "html/qyb/qiyeBao.html"
+    ],
+    "resources": []
+  },
+  "html/zh/use-welfare.html": {
+    "refer": [
+      "html/zh/zh-welfare.html"
+    ],
+    "resources": []
+  },
+  "html/qyb/qyb-profit.html": {
+    "resources": [
+      "html/qyb/qyb-profit-list.html"
+    ],
+    "refer": [
+      "html/qyb/qyb-profit-list.html"
+    ]
+  },
+  "html/cp/product.html": {
+    "refer": [
+      "html/cp/purchase.html",
+      "html/cp/holding.html",
+      "login.html"
+    ],
+    "resources": []
+  },
+  "html/cp/purchase.html": {
+    "refer": [
+      "html/cp/payment.html"
+    ],
+    "resources": []
+  },
+  "html/set/bank.html": {
+    "refer": [
+      "html/set/addNewCar.html"
+    ],
+    "resources": [
+      "fonts/mui.ttf"
+    ]
+  },
+  "html/set/set.html": {
+    "refer": [
+      "html/set/bank.html",
+      "html/set/updatedPass.html",
+      "html/set/personMsg.html",
+      "login.html",
+      "html/set/msgcenter.html"
+    ],
+    "resources": [
+      "fonts/mui.ttf"
+    ]
+  },
+  "html/set/updatedPass.html": {
+    "refer": [
+      "html/set/addNewCar.html"
+    ],
+    "resources": []
+  },
+  "html/set/personMsg.html": {
+    "refer": [
+      "html/set/addNewCar.html",
+      "html/set/avatars.html"
+    ],
+    "resources": []
+  },
+  "forget.html": {
+    "refer": [
+      "login.html"
+    ],
+    "resources": []
+  },
+  "html/cp/payment.html": {
+    "refer": [
+      "html/cp/purchase.html"
+    ],
+    "resources": []
+  },
+  "html/set/avatars.html": {
+    "refer": [
+      "html/set/personMsg.html"
+    ],
+    "resources": []
+  },
+  "html/set/addNewCar.html": {
+    "resources": [
+      "fonts/mui.ttf"
+    ],
+    "refer": []
+  }
+}

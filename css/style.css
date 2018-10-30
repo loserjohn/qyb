@@ -1,0 +1,780 @@
+
+
+/*登录页面**********************开始****************/
+
+#logo{
+	width: auto;
+	height:60px;
+	margin: 100px auto;
+}
+#login-form{
+	box-sizing: border-box;
+	padding: 10px;
+}
+#login-form input{
+	border: none;
+	outline: none;
+	/*background: red;*/
+	height: 40px;
+	line-height: 40px;
+	border-bottom: 1px solid #e3e3e3;
+	border-radius: 0px;
+	margin-left: 10px;
+
+}
+#login-form label{
+	line-height: 40px;
+}
+
+
+/*登录页面**********************结束****************/
+
+
+
+
+/*注册页面**********************开始****************/
+
+#forgetform{
+	box-sizing: border-box;
+	padding: 10px;
+	margin-top: 100px;
+}
+#forgetform>div{
+	border-bottom: 1px solid #e3e3e3;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+}
+#forgetform input{
+	border: none;
+	outline: none;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 0px;
+	margin-bottom: 0;
+}
+#forgetform label{
+	line-height: 40px;
+	width: 100px;
+	text-align: left;
+}
+	
+.registerBtn button:last-child{
+	background: #fff!important;
+	color: #0062CC;
+}	
+#getYZM{
+	background: #2786ca;
+	color: #fff;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 10px;
+	border: none;
+}
+
+
+
+/*注册页面**********************结束****************/
+
+
+
+
+/*账户首页********************开始*************/
+
+/*2018/3.15*/
+/*资产模块*/
+.AssetsMsgBox {
+	background: #3c8fe8;
+	color: #fff;
+	box-sizing: border-box;
+	background: url(../img/bg.jpg) center/cover no-repeat;
+	text-align: center;
+	padding-top: 40px;
+}
+
+.AssetsMsgBox p {
+	color: #add4ff;
+	text-align: center;
+}
+
+.AssetsMsgBox>article {
+	width: 100%;
+	box-sizing: border-box;
+	padding:0 10px;
+}
+.AssetsMsgBox .allAssets{
+	margin: 15px auto 5px auto;
+}
+.AssetsMsgBox .AssetsBot {
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.AssetsMsgBox .AssetsBot .AssetsBotlist {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	padding:10px 10px 4px 10px;
+}
+.AssetsMsgBox .AssetsBot .AssetsBotlist:first-child{
+	background: rgba(0,0,0,0.1);
+}
+.AssetsMsgBox .AssetsBot .AssetsBotlist:last-child{
+	background: rgba(0,0,0,0.2);
+}
+.AssetsMsgBox .AssetsBot .AssetsBotlist .AssetsBotlist_pic{
+	flex: 1;
+}
+.AssetsMsgBox .AssetsBot .AssetsBotlist .AssetsBotlist_cir{
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #fff;
+	margin: 4px auto;
+}
+.AssetsMsgBox .AssetsBot .AssetsBotlist .AssetsBotlist_txt{
+	flex: 2;
+}
+/*<!--操作菜单-->*/
+.integral{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+}
+.integral>p{
+	flex: 1;
+	text-align: left;
+	
+}
+.integral>h3{
+	flex: 1;
+	text-align: right;
+	font-weight: 400;
+	font-size: 16px;
+}
+.finance{
+	background: #FFF;
+	box-sizing: border-box;
+	padding: 10px;
+}
+.finance>ul{
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	margin-top: 10px;
+}
+.finance>ul .financelists{
+	flex: 1;
+}
+
+/*个人简要信息*/
+.personMsg {
+	background: #fff;
+	box-sizing: border-box;
+	padding: 10px;
+	margin-top: 8px;
+	padding-bottom: 50px;
+}
+
+.personMsg>aside {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	border-bottom: 1px dashed #ddd;
+	padding-bottom: 10px;
+}
+
+.personMsg>aside h4 {
+	flex: 3;
+	line-height: 40px;
+	text-align: left;
+	margin: 0;
+	margin-left: 10px;
+	padding: 0;
+	font-size: 14px;
+}
+
+.personMsg>aside a {
+	flex: 2;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	justify-content:  flex-end ;
+}
+.personMsg>aside a>span{
+	line-height: 40px;
+	margin-left: 10px;
+	margin-left: 0;
+	float: right;
+}
+
+.personMsg>article{
+	width: 100%;
+	padding: 5px 0;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+} 
+.personMsg .personMsg_left{
+	flex:1;
+	/*border-right: 1px dashed #ddd;*/
+}
+.personMsg .personMsg_left>div{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	line-height: 40px;
+}
+.personMsg .personMsg_left #scoreBox {
+	line-height: 20px;
+	/*margin-left: 5px;*/
+	/*font-size: 12px;*/
+	margin: 10px 0 10px 5px;
+}
+
+.personMsg .personMsg_left #scoreBox span{
+	margin-left: 5px;
+}
+.personMsg .personMsg_left p{
+	flex: 1;
+	text-align: left;
+}
+
+.personMsg .personMsg_left h4{
+	flex: 1;
+	text-align: right;
+	font-size: 14px;
+	line-height: 30px;
+}
+
+.personMsg .personMsg_right {
+	flex: 1;
+	padding: 10px 0;
+	/*background: red;*/
+}
+.personMsg .personMsg_right #echart{
+	width: 100%;
+}
+/*福利特权页面*/
+.mywelfare{
+	width: 100%;
+	background: #fff;
+	margin-bottom: 8px;
+	padding: 10px 0 0 0;
+}
+.mywelfare .mywelfare-lis{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+}
+.mywelfare .mywelfare-lis p{
+	flex: 1;
+}
+.nextwelfare{
+	width: 100%;
+	background: #fff;
+	margin-bottom: 8px;
+	padding: 10px 0 0 0;
+}
+.nextwelfare p{
+color: #b6b6b6;
+}
+.voucher{
+	background: #fff;
+	padding: 10px 0 0 0;
+}
+.voucher ul{
+	border-top:1px solid #e3e3e3;
+}
+.voucher .voucher_lis{
+	border-bottom: 1px solid #e3e3e3;
+}
+.voucher .voucher_lis>a{
+	display: block;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+}
+.voucher .voucher_lis .voucher_lis_pics{
+	position: relative;
+}
+.voucher .voucher_lis .voucher_lis_pics p{
+	position: absolute;
+	top: 5px;
+	color: #fff;
+	width: 78px;
+	text-align: center;
+}
+.voucher .voucher_lis .voucher_lis_pics img{
+	width: 120px;
+}
+.voucher .voucher_lis a>div{
+	flex: 1;
+	line-height: 54px;
+	color: #404040;
+}
+.voucher .voucher_lis a>article{
+	flex: 1;
+	line-height: 54px;
+	text-align: right;
+	color: #404040;
+}
+
+/*提现页面*/
+/*.extractMoney .moneyBox{
+	width: 80%;
+	margin: 0 auto;
+	height: 120px;
+	border-bottom: 1px dashed #e3e3e3;
+}*/
+/*.extractMoney .moneyBox>p{
+	flex: 1;
+	font-size: 40px;
+	line-height: 120px;
+	color:#404040
+}*/
+/*.extractMoney .moneyBox>#cardNum{
+	flex: 3;
+	border: none;
+	height: 70px;
+	margin: 25px auto;
+	font-size: 30px;
+}
+.extractMoney>aside {
+	margin: 10px auto;
+}
+.extractMoney>aside  p{
+	flex: 1;
+}*/
+#sheet .bankcar{
+	background: #fff;
+}
+#sheet .bankcar>div{
+flex: 1;	
+}
+#sheet .bankcar>img{
+	width: 40px;
+	height: 40px;
+}
+#sheet .bankcar>div>p{
+	text-align: right;	
+}
+#sheet .bankcar>div>p:first-child{
+	color: #404040;
+}
+
+
+/*账户首页********************结束*************/
+
+
+
+
+/*3.16*/
+/*企业宝页面********************开始*************/
+
+.AssetsMsgBox .AssetsHalf .Assetsleft{
+	flex: 1;
+}
+.AssetsMsgBox .AssetsHalf .Assetsright{
+	flex: 1;
+}
+
+/*快捷按钮*/
+
+.quickMenu {
+	width: 100%;
+	/*border-top: 4px solid #5ac7f1;*/
+	box-sizing: border-box;
+	background: #fff;
+}
+.quickMenu>ul{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	flex-wrap: wrap;
+	border-top: 1px solid #f3f3f3;
+}
+.quickMenu .quickMenulis{
+	width: 50%;
+	height: 60px;
+	border-bottom: 1px solid #e3e3e3;
+}
+.quickMenu .quickMenulis a {
+	display: block;
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	/*background: #fff;*/
+}
+
+.quickMenu .quickMenulis a img{
+	width: 44px;
+    height: 44px;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.quickMenu .quickMenulis a p{
+	flex: 1;
+	line-height: 60px;
+}
+
+/*轮播图*/
+#slider{
+	margin-top: 8px;
+}
+
+/*企业保收益页面*/
+#echart{
+	width: 100%;
+	height:200px;
+}
+.echartBox{
+	border-bottom: 1px solid #d3d3d3;
+	position: fixed;
+	/*background: red;*/
+	/*height: 280px;*/
+	z-index: 100;
+}
+
+/*转入金额*/
+
+#inBtn{
+	margin-top: 20px;
+	background: #f7630d!important;
+	border: none;
+}
+.deposit_node{
+	line-height: 3;
+	margin-top: 20px;
+}
+.depositBox{
+	/*width: 90%;*/
+	margin: 0 auto;
+}
+.depositBox .depositBox_top{
+	width: 100%;
+	background: #fff;
+	border-radius: 16px 16px 0 0;
+	box-sizing: border-box;
+	padding: 15px 20px;
+}
+.depositBox  .moneyBox{
+	/*width: 80%;*/
+	margin: 0 auto;
+	height: 100px;
+	border-bottom: 1px dashed #e3e3e3;
+	/*background: red;*/
+}
+
+.depositBox .moneyBox>p{
+	font-size: 40px;
+	line-height: 100px;
+	color:#404040
+}
+.depositBox  .moneyBox  #inputMoney{
+    border: none;
+	line-height: 100px;
+	height: 100px;
+    font-size: 34px;
+    text-align: left;
+    padding:0 10px ;
+}
+
+
+
+.depositBox .depositBox_top>aside p{
+	margin-top: 10px;
+	flex: 1;
+}
+
+.depositBox  .moneyBox>.moneyMiddleBox{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex
+	justify-content: center;
+	margin: 0 auto;
+	/*background: red;*/
+}
+
+.depositBox  .moneyBox>.moneyMiddleBox  p{
+	    font-size: 34px;
+	    line-height: 100px;
+	    /*background: red;*/	    
+}
+
+
+
+
+.depositBox .depositBox_bot{
+	width: 100%;
+	background: #eee;
+	border-radius: 0 0   16px 16px; 
+	box-sizing: border-box;
+	padding: 15px 20px;
+}
+.depositBox .depositBox_bot>h5{
+	font-weight: 600;
+	color: #0062CC;
+}
+
+
+.depositBox .depositBox_bot .in-num{
+	line-height: 1.5;
+	font-size: 24px;
+	font-weight: 400;
+}
+.depositBox .depositBox_bot aside{
+	margin-bottom: 5px;
+}
+.depositBox .depositBox_bot aside p{
+	flex: 1;
+}
+.depositBox .depositBox_bot  #earnnum{
+	line-height: 2;
+	font-size: 24px;
+	font-weight: 400;
+}
+
+/*转出*/
+#outBtn{
+	margin-top:20px ;
+}
+.depositBox.extract .depositBox_top{
+	border-radius: 16px;
+}
+
+/*企业宝页面********************结束*************/
+
+
+/*设置页面********************开始*************/
+.personset{
+	margin-bottom: 8px;
+}
+#loginOut{
+	background: #ff776f!important;
+	border: none;
+}
+/*#avaterBg{
+	background: url('../img/banner-4.jpg') 0 0/cover no-repeat;
+}*/
+.personavaterBox{
+	width: 100px;
+	height:100px;
+	border-radius: 50%;
+	border:4px solid #fff;
+	margin: 0 auto;
+	background: #fff7e6;
+	overflow: hidden;
+}
+.personavaterBox>img{
+	width: auto;
+	height:100px;
+	margin: 0 auto;
+}
+.personmenu p{
+	flex: 1;
+}
+.personmenu p>i{
+	font-size: 16px;
+	color: #fff;
+}
+.personset .personicon{
+	margin-right: 10px;
+}
+/*银行卡页面*/
+.bank{
+	padding-bottom: 10px;
+}
+.bankList{
+	margin-top: 8px;
+}
+.bank_node{
+	background: #f5fbff;
+	/*background: red;*/
+}
+.bankList li h5{
+	color: #404040;
+	font-size: 16px;
+	margin: 0 0  5px 0;
+	line-height: 1;
+}
+
+/*添加新卡*/
+.addCar{
+	/*border-bottom: 1px solid #e3e3e3;*/
+}
+.addCar .carNumBox i{
+	line-height: 60px;
+}
+.addCar .carNumBox>div{
+	border: none;
+	height: 60px;
+	
+	/*background: red;*/
+}
+.addCar .carNumBox #carNum{
+	line-height: 40px;
+	margin-top: 10px;
+	outline: none;
+	border: none;
+	width: 100%;
+}
+/*个人信息设置*/
+.personMsgBox h4{
+	color: #404040;
+	margin-bottom: 15px;
+}
+.personMsgAvater{
+	margin:15px auto ;
+	border-radius: 50%;
+}
+
+/*修改密码:*/
+.updatedPass{
+	font-size: 16px;
+}
+.updatedPass input{
+	border: none;
+	/*background: red;*/
+	outline: none;
+	font-size: 16px;
+}
+.updatedPass  aside{
+	line-height: 40px;
+}
+.updatedPass  button{
+	background: #2786ca;
+	color: #fff;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 10px;
+	border: none;
+}
+.newPass{
+	font-size: 16px;
+}
+.newPass p{
+	font-size: 16px;
+}
+.newPass input{
+	border: none;
+	/*background: red;*/
+	outline: none;
+	font-size: 16px;
+	border-bottom:1px solid #e3e3e3
+}
+
+/*设置页面********************结束*************/
+
+
+
+
+/*产品页面********************开始*************/
+.productmenus{
+	box-sizing: border-box;
+	padding: 5px 0;
+	background: #fff;
+	/*border-top: 4px solid #5ac7f1;*/
+	margin-bottom: 8px;
+}
+.productmenus>div{
+	flex: 1;
+}
+.productmenus>div:first-child{
+	border-right: 1px dashed #e3e3e3;
+}
+.productmenus>div img{
+	width: 100px;
+	height: 50px;
+}
+.productmenus>div p{
+	flex: 1;
+	line-height: 50px;
+}
+
+/*当前持有产品*/
+.holding{
+	/*margin-right: 30px;*/
+	text-align: right;
+}
+.holding_t h3{
+	font-size: 16px;
+	color: #404040;
+	text-align: right;
+	margin-top: 8px;
+}
+.holding_b{
+	padding: 10px 0 0 0;
+}
+.holding_b span{
+	font-size: 20px;
+}
+/*购买产品页面*/
+.purchase article{
+	padding:0 0 10px 0;
+	border-bottom: 1px solid #e3e3e3;
+}
+.purchase article h3 {
+	padding-bottom: 5px;
+	margin-top: 20px;
+}
+.purchase aside{
+	padding: 10px 0;
+}
+.purchase aside span{
+	border: 1px solid #d3d3d3;
+	font-size: 10px;
+	padding: 2px 5px;
+	border-radius: 2px;
+	margin: 0 5px;
+}
+.purchase aside span.active{
+	color: #08e6ff;
+	border: 1px solid #08e6ff;
+}
+.purchaserule{
+	border-top: 1px solid #e3e3e3;	
+	padding: 10px 0;
+	border-bottom: 1px dashed #e3e3e3;
+}
+.purchaserule>aside p{
+	color: #404040;
+	position: relative;
+}
+.purchaserule>aside p::before{
+	content:'';
+	width: 6px;
+	height: 6px;
+	border: 1px solid #0062CC;
+	background: #fff;
+	position: absolute;
+	border-radius: 50%;
+	left: 50%;
+	bottom: -4px;
+	margin-left: -3px;
+}
+.purchaserule>aside{
+	border-bottom: 2px solid #0062CC;
+}
+.purchaserule>article p{
+	box-sizing: border-box;
+	padding: 5px 8px ;
+	color: red!important;
+}
+.purchaseruleList{
+	padding: 10px 0;
+}
+/*预约购买*/
+.paymentBox .depositBox_top{
+	border-radius:inherit;
+}
+
+
+
+
+
+/*产品页面********************结束*************/
+
+

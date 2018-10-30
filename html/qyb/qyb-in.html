@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>转入金额</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body style="background:#f9af08!important;">
+		<!--<header class="mui-bar mui-bar-nav mui-clearfix " style="background:#f9af08 ;" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+			<h1 class="mui-title">转入金额</h1>
+		</header>-->
+
+		<div class="mui-content no-bg container" id="content">
+			<p class="cor_w xs deposit_node">该操作您将向企业宝转入金额</p>
+			<div class="depositBox">
+				<div class="depositBox_top">
+					<p class="txt-l">转入金额:</p>
+					<article class="moneyBox flex">
+						<p class=" txt-r">￥</p>
+						<div class="f1 txt-l" style="display: inline-block;" >
+							<input type="text" id="inputMoney" name="" value="" max="1500"/>
+						</div>		
+					</article>
+					<aside class="flex">
+						<p class="txt-l xs">账户可用余额：<span id="allAmount">165</span></p>
+						<p class="txt-r cor_sky xs" id="allIn">全部转入</p>
+					</aside>
+				</div>
+				<div class="depositBox_bot">
+					<h5>收益计算器</h5>
+					<div>
+						<!--<p class="txt-l">模拟预存金额:</p>-->
+						<h4 class="in-num lh2" id="moniAmount">0</h4>
+						<div class="mui-input-row mui-input-range">
+							<input type="range" min="0" max="0" value=0 id="moniIput">
+						</div>
+					</div>
+					<aside class="flex ">
+						<p class="txt-l xs lh2 ">0</p>
+						<p class="txt-r xs lh2" id="maxAmount">520</p>
+					</aside>
+					<aside class="flex ">
+						<p class="txt-l xs lh3" >当前年利率：</p>
+						<p class="txt-r xs lh3" id="nowYearRate">0.0%</p>
+					</aside>
+					<article>
+						<p class="txt-l xs">预计月收入（30天）:</p>
+						<h3 id="mountEarning">0</h3>
+					</article>
+				</div>
+			</div>
+			<div class="lh2" style="color: #fff;">
+				预计收益到账时间为操作成功后2日之后
+			</div>
+			<div style="margin-top:20px">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block " id="submitBtn">确认转入</button>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+				var wv = plus.webview.currentWebview();
+				wv.setStyle({
+					titleNView: {
+						//							type:'transparent',
+
+						autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+						titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+						titleSize: "14px", // 字体大小,默认17px
+						backgroundColor: "#f9af08", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+						progress: { // 标题栏控件的进度条样式
+							color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+							height: "2px" // 进度条高度,默认值为"2px"         
+						},
+						splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+							color: "#f9af08", // 分割线颜色,默认值为"#CCCCCC"  
+							height: "1px" // 分割线高度,默认值为"2px"
+						}
+					}
+				});
+				
+				
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+		
+				var tk = app.getState().token;
+				//				金额输入框
+				var inputMoney = document.getElementById('inputMoney')
+				//				全部存入
+				var allIn = document.getElementById('allIn')
+				//				全部金额
+				var allAmount = document.getElementById('allAmount')
+				//				模拟--滑块
+				var moniIput = document.getElementById('moniIput')
+				//				模拟金额数
+				var moniAmount = document.getElementById('moniAmount')
+				//				模拟的最大金额
+				var maxAmount = document.getElementById('maxAmount')
+				//				日利率
+				var nowYearRate = document.getElementById('nowYearRate')
+				//				月收益预算
+				var mountEarning = document.getElementById('mountEarning')
+				//				提交操作
+				var submitBtn = document.getElementById('submitBtn')
+//				储存当前利率
+				var rate
+
+				allAmount.innerHTML = self.AccountAmount
+				inputMoney.max = self.AccountAmount
+				moniIput.max = self.AccountAmount
+				maxAmount.innerHTML = self.AccountAmount
+
+
+				//				收益计算其滑块
+				moniIput.addEventListener('input', function() {
+					moniAmount.innerHTML = this.value;			
+					mountEarning.innerHTML=app.mount_Interest(this.value,rate)				
+				});
+				
+				
+//				首次加载企业宝利率
+				mui.ajax(app.baseUrl + '/Data/api/QybAccount/CompanySet', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+						if(data.Success) {
+							nowYearRate.innerHTML=data.Data.RATE_VALUE+'%';
+							rate=data.Data.RATE_VALUE
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						app.ajaxError(errorThrown)				
+					}
+				});
+				
+
+				
+				
+//				提交操作
+				submitBtn.addEventListener('tap', function() {
+					var _this=this			                
+					if(inputMoney.value.length <= 0 || inputMoney.value == 0) {
+						plus.nativeUI.toast('请输入金额');
+						return
+					}
+					mui.confirm('￥' + inputMoney.value, '确认存入金额？', ['取消', '确定'], function(e) {
+						if(e.index == 1) {
+							mui(_this).button('loading');
+							//							确认操作
+//							plus.nativeUI.showWaiting('提交操作中')
+							//					符合金额格式
+							mui.ajax(app.baseUrl + '/Data/api/QybAccount/TransferIn', {
+								//			dataType:'json',//服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded',
+									'Authorization': tk
+								},
+								data: {
+									amount: inputMoney.value
+								},
+								success: function(data) {
+									mui(_this).button('reset');
+//									plus.nativeUI.closeWaiting();
+									if(!data.Success) {
+										mui.alert(data.Msg, '操作失败', function() {
+											inputMoney.value = 0
+										});
+									} else {
+										mui.alert('存入成功', function() {
+											plus.nativeUI.showWaiting('数据更新中')
+											plus.webview.getWebviewById('index').reload(true)
+																												
+											plus.webview.getWebviewById('qiyeBao').reload(true)
+											plus.webview.getWebviewById('product').reload(true)
+											
+											mui.later(function() {
+												plus.nativeUI.closeWaiting();
+												plus.webview.getWebviewById('index').evalJS('tabInit(2)');
+												mui.back()
+											}, 1500)
+										})
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理；
+									mui(_this).button('reset');
+									app.ajaxError(errorThrown)	
+								}
+							});
+
+						} else {
+							return false
+						}
+					});
+
+				});
+
+			})
+		</script>
+	</body>
+
+</html>

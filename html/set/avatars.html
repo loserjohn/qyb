@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>头像选择</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav mui-clearfix subhead" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+			<h1 class="mui-title">头像选择</h1>
+		</header>-->
+
+		<div class="mui-content avatarsBox" id="content">
+			<!--男士-->
+			<div id="man_listInfoBox">
+				<ul class="mui-table-view mui-grid-view mui-grid-9" style="background: #fff;">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(1)'>
+						<img src="../../img/mp (1).png" alt="" />
+						<p>男 1</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(2)'>
+						<img src="../../img/mp (2).png" alt="" />
+						<p>男 2</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(3)'>
+						<img src="../../img/mp (3).png" alt="" />
+						<p>男 3</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(4)'>
+						<img src="../../img/mp (4).png" alt="" />
+						<p>男 4</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(5)'>
+						<img src="../../img/mp (5).png" alt="" />
+						<p>男 5</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(6)'>
+						<img src="../../img/mp (6).png" alt="" />
+						<p>男 6</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(7)'>
+						<img src="../../img/mp (7).png" alt="" />
+						<p>男7</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(8)'>
+						<img src="../../img/mp (8).png" alt="" />
+						<p>男8</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='mp(9)'>
+						<img src="../../img/mp (9).png" alt="" />
+						<p>男 9</p>
+					</li>
+				</ul>
+			</div>
+
+			<!--女士-->
+			<div id="woman_listInfoBox">
+				<ul class="mui-table-view mui-grid-view mui-grid-9" style="background: #fff;">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(1)'>
+						<img src="../../img/wp (1).png" alt="" />
+						<p>女 1</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(2)'>
+						<img src="../../img/wp (2).png" alt="" />
+						<p>女 2</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(3)'>
+						<img src="../../img/wp (3).png" alt="" />
+						<p>女 3</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(4)'>
+						<img src="../../img/wp (4).png" alt="" />
+						<p>女 4</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(5)'>
+						<img src="../../img/wp (5).png" alt="" />
+						<p>女 5</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(6)'>
+						<img src="../../img/wp (6).png" alt="" />
+						<p>女 6</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(7)'>
+						<img src="../../img/wp (7).png" alt="" />
+						<p>女 7</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(8)'>
+						<img src="../../img/wp (8).png" alt="" />
+						<p>女 8</p>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" pickey='wp(9)'>
+						<img src="../../img/wp (9).png" alt="" />
+						<p>女 9</p>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/arttemp.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false
+			})
+		
+			var tk = app.getState().token;
+			mui.plusReady(function() {
+				
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				self.setStyle({
+					titleNView: {
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							}
+						}
+				});
+				var userSex = self.sex
+	
+				var manPics = document.getElementById('man_listInfoBox')
+				var womanPics = document.getElementById('woman_listInfoBox')
+				mui.later(function() {
+					plus.nativeUI.closeWaiting();
+					plus.webview.currentWebview().show('slide-in-right', 300);
+				}, 1000)
+				
+
+				if(userSex == "男") {
+					womanPics.style.display = 'none'
+				} else {
+					manPics.style.display = 'none'
+				}
+
+			})
+
+			//			点击头像选择
+			mui('.avatarsBox').on('tap', 'li', function() {
+				var pickey = this.getAttribute('pickey')
+
+				mui.confirm('您确定启用此头像？', '小贴士提醒您', ['取消', '确定'], function(e) {
+					if(e.index == 1) {
+						//				更改头像
+						mui.ajax(app.baseUrl + '/Data/api/User/SetUserHead', {
+							//			dataType:'json',//服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded',
+								'Authorization': tk
+							},
+							data: {
+								img: pickey
+							},
+							success: function(data) {
+								if(data.Success) {
+									
+									mui.alert('点击确认返回', '头像修改成功', function() {
+										plus.nativeUI.showWaiting('数据更新中')
+										plus.webview.getWebviewById('set').reload(true)
+										plus.webview.getWebviewById('personMsg').reload(true)
+										mui.later(function() {
+												plus.nativeUI.closeWaiting();
+												mui.back()
+											}, 1500)
+									});
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								app.ajaxError(errorThrown)
+							}
+						});
+					} else {
+						return false
+					}
+				})
+
+			});
+		</script>
+	</body>
+
+</html>

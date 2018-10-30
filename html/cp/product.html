@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+	</head>
+
+	<body>
+		<!--头部-->
+		<header id="header" class="mui-bar mui-bar-transparent" style="background-color: rgba(44, 137, 207, 0)">
+			<h1 class="mui-title" style="">项目投资</h1>
+		</header>
+		<div class="mui-content main" style="margin-bottom: 50px;">
+
+			<!--总资产信息-->
+			<div class="AssetsMsgBox" id="content">
+				<script id="assetsTmp" type="text/template">
+					<article class="allAssets">
+						<p>产品总金额</p>
+						<h3 style="line-height: 2;">{{ProductAmount}}</h3>
+					</article>
+					<aside class="AssetsHalf flex" style="background: rgba(0,0,0,.1);">
+						<div class="Assetsleft">
+							<p style="text-align: center;line-height: 2;">昨日收益</p>
+							<h4 style="">{{ProductYesterdayIncome}}</h4>
+						</div>
+						<div class="Assetsright">
+							<p style="text-align: center;line-height: 2;">累计收益</p>
+							<h4 style="">{{ProductTotalIncome}}</h4>
+						</div>
+					</aside>
+				</script>	
+			</div>
+
+			<!--便捷菜单-->
+			<div class="productmenus flex">
+				<div>
+					<a href="./cprule.html" hid="cprule"  class="flex a">
+						<img src="../../img/cp_1.png" alt="" />
+						<p>交易规则</p>
+					</a>
+				</div>
+				<div>
+					<a href="./holding.html" hid="holding" class="flex a">
+						<img src="../../img/cp_2.png" alt="" />
+						<p>已购产品</p>
+					</a>
+				</div>
+			</div>
+
+			<!--最新项目-->
+			<div class="com_block2">
+				<div class="container mui-clearfix" style="padding: 0 10px;">
+					<h4 class="com_ti1" style="margin: 15px auto;">最新项目</h4>
+				</div>
+
+				<ul class="" id="productsBox">
+					<script id="productsTmp" type="text/template">
+						{{each ListInfo value i}}
+						<li class="com_block2_lis productlist" extraKey={{value.PRODUCT_CODE}}  preUrl={{baseUrl +  value.PRODUCT_IMG}}>					
+								<aside class="flex">
+									<div class="f1 txt-l">
+										{{each value.PRODUCT_MARK  item i}}
+										<span class="com_block2_icon">{{item}}</span>
+										{{/each}}
+									</div>									
+									<span class="time">{{value.PRODUCT_TYPE==0?'单利':'复利'}}</span>
+								</aside>
+								<article class="flex">
+									<div class="pic">
+										<img src={{baseUrl + value.PRODUCT_IMG}}  alt="" />
+									</div>
+									<div class="f1">
+										<h5>{{value.PRODUCT_NAME}}</h5>
+										<p>周期：<span>
+												{{value.PRODUCT_LIFE}}
+										</span>天</p>
+									</div>
+									<div class="f1">
+										<h3>
+											{{value.RATE_VALUE+'%'}}
+										</h3>
+										<p>
+											年化利率
+										</p>
+									</div>
+								</article>
+							
+						</li>
+						{{/each}}
+					</script>
+				</ul>
+			</div>
+
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/arttemp.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+				keyEventBind: {
+					backbutton: false, //Boolean(默认true)关闭back按键监听
+					menubutton: false //Boolean(默认true)关闭menu按键监听
+				},
+			})
+			mui.plusReady(function() {
+//				alert(666)
+				app.initHeader()
+				
+				//隐藏滚动条				
+				plus.webview.currentWebview().setStyle({scrollIndicator:'none'});	
+				var tk = app.getState().token;
+
+				var box = document.getElementById('productsBox')
+				var self = plus.webview.currentWebview(); 
+
+//				首次加载金额数据
+				mui.ajax(app.baseUrl + '/Data/api/Account/AmountIncome', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+						if(data.Success) {
+							var html = template('assetsTmp', data.Data);
+							document.getElementById('content').innerHTML = html;
+							allAccount = data.Data
+							//预加载页面
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(errorThrown)
+					}
+				});
+				
+				
+//				获取项目列表
+				mui.ajax(app.baseUrl + '/Data/api/Product/GetProductList', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					
+					success: function(data) {
+//						alert(1)
+						if(data.Success) {
+//							console.log(data.Data.ListInfo.length)
+							if(data.Data.ListInfo.length == 0) {
+								box.innerHTML = '<p class="lh3">暂时没有相关项目</p>'
+							} else {
+								var list = {
+									baseUrl: app.baseUrl,
+									ListInfo: data.Data.ListInfo
+								};
+								var html = template('productsTmp', list);
+								box.innerHTML = html;
+							}							
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；					
+					}
+				});
+
+				//	详情页跳转事件及传值
+				mui('#productsBox').on('tap', '.productlist', function() {
+					//	获取额外的参数
+					var destid = this.getAttribute('extraKey') || ''
+					var preUrl = this.getAttribute('preUrl') || ''
+//					console.log(preUrl)
+					mui.openWindow({
+						url: './purchase.html',
+						id: 'purchase',
+						styles: {
+							top: '0px', //新页面顶部位置
+							bottom: '0px', //新页面底部位置
+							scrollIndicator: "none",
+							plusrequire: 'ahead'
+						},
+						createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+						show: {
+							autoShow: false, //页面loaded事件发生后自动显示，默认为true
+							duration: 300 //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						},
+						extras: {
+							pId: destid,
+							preUrl:preUrl,
+							qybAmount:allAccount.TreasureAmount
+						},
+						waiting: {
+							autoShow: true, //自动显示等待框，默认为true
+							title: '正在加载...', //等待对话框上显示的提示内容
+						}
+					})
+				});
+
+			})
+		</script>
+	</body>
+
+</html>

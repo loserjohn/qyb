@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>银行卡管理</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" href="../../css/style.css" />
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav mui-clearfix subhead" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+			<h1 class="mui-title">银行卡管理</h1>
+			<a class="mui-pull-right" style="line-height: 44px;" id="add">
+				<i class="mui-icon mui-icon-plusempty"></i>
+			</a>
+		</header>-->
+
+		<div class="mui-content  " id="content">
+
+			<!--小贴士-->
+			<div class="bank bg-w mui-clearfix cor_w">
+				<div class="pad10">
+					<p class="com_ti1" style="margin: 15px auto;">银行卡</p>
+				</div>
+				<div class="pad10 ">
+					<div class="bank_node container">
+						<p class="txt-l ">小贴士：</p>
+						<p class="txt-l cor_b"><i class="iconfont   icon-zhanghuyichang  cor_b"></i>银行卡的删除将不可撤销、返回，请仔细核对后再进行操作</p>
+						<p class="txt-l cor_b"><i class="iconfont   icon-zhanghuyichang  cor_b"></i>如您更换了银行卡的预留手机号，请先删除，并重新添加</p>
+						<p class="txt-l cor_b"><i class="iconfont   icon-zhanghuyichang  cor_b"></i>银行卡条目左滑为删除解绑操作</p>
+					</div>
+				</div>
+			</div>
+
+			<!--银行卡列表-->
+			<div class="bankList">
+				<ul id="cards" class="mui-table-view">
+					<script id="bankCards" type="text/template">
+						{{each ListInfo value i}}
+						<li class="mui-table-view-cell mui-transitioning" lid={{value.CARD_CODE}}>
+							<div class="mui-slider-right mui-disabled">
+								<a class="mui-btn mui-btn-red" id="delect" style="transform: translate(0px, 0px);">删除</a>
+								<a class="mui-btn mui-btn-blue" id="default" style="transform: translate(0px, 0px);">默认</a>
+							</div>
+							<div class="mui-slider-handle txt-l " style="transform: translate(0px, 0px);">
+								<img src={{baseUrl + value.BANK_LOGO}} alt="" width="40px" height="40px" />
+								<div class="mrl fr">
+									<h5 class="txt-r">{{value.AFFILIATED_BANK}}</h5>
+									<p>{{value.CARD_NUM}}</p>
+								</div>
+							</div>
+						</li>
+						{{/each}}
+					</script>
+				</ul>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/arttemp.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			})
+			mui.plusReady(function() {
+				var wv = plus.webview.currentWebview();
+				wv.setStyle({
+					titleNView: {
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							},
+							buttons:[
+							{
+								text:'添加',
+								fontSize:'14px',
+								onclick:addNew
+							}]
+						}
+				});
+
+				app.fullprePage('addNewCar.html', 'addNewCar')
+				var tk = app.getState().token;
+
+//				加载名下的开银行卡列表
+				mui.ajax(app.baseUrl + '/Data/api/Bank/GetStaffBankList', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+
+						if(data.Success) {
+				
+							if(data.Data.ListInfo.length == 0) {
+								document.getElementById('cards').innerHTML='<p class="lh3">您当前还没有绑定银行卡</p>'
+							} else {
+								var list = {
+									baseUrl: app.baseUrl,
+									ListInfo: data.Data.ListInfo
+								};
+								var html = template('bankCards', list);
+									document.getElementById('cards').innerHTML = html;
+								}
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						app.ajaxError(errorThrown)	
+					}
+				});
+
+//			    左滑删除银行卡
+				mui('#cards').on('tap', '.mui-btn', function(event) {
+					var elem = this;
+					var type=this.id
+					var li = elem.parentNode.parentNode;						
+					var lid = li.getAttribute('lid')
+					
+					switch (type){
+						case 'delect':
+//						删除操作
+							mui.confirm('确认解绑该银行卡？', '小贴士提醒您', ['取消', '确定'], function(e) {
+								if(e.index == 1) {
+									//							删除操作
+									removeCard(lid, function() {
+										li.parentNode.removeChild(li);
+									})
+								} else {
+									setTimeout(function() {
+										mui.swipeoutClose(li);
+									}, 0);
+								}
+							});
+						break;
+						case 'default':
+//						默认卡选择
+							mui.confirm('确认将此该银行卡设为默认银行卡？', '小贴士提醒您', ['取消', '确定'], function(e) {
+								if(e.index == 1) {
+									//						默认卡提交操作
+									defaultCard(lid, function() {
+										mui.swipeoutClose(li);
+									})
+								} else {
+									setTimeout(function() {
+										mui.swipeoutClose(li);
+									}, 0);
+								}
+							});
+						break;
+						default:
+						break;
+					}
+			
+				});
+
+				//				返回本页刷新事件
+
+				//				删除操作
+				function removeCard(id, callbask) {
+					mui.ajax(app.baseUrl + '/Data/api/Bank/UnBindingStaffBank', {
+						//			dataType:'json',//服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data: {
+							CARD_CODE: id
+						},
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+							'Authorization': tk
+						},
+						success: function(data) {
+							//							console.log(data.Success)
+							if(data.Success) {
+								plus.nativeUI.toast('解绑成功');
+								callbask()
+							} else {
+								plus.nativeUI.toast('解绑失败');
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							app.ajaxError(errorThrown)	
+						}
+					});
+				}
+				
+				//		默认卡选择操作
+				function defaultCard(id, callbask) {
+					mui.ajax(app.baseUrl + '/Data/api/Bank/SetDefultStaffBank', {
+						//			dataType:'json',//服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data: {
+							CARD_CODE: id
+						},
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+							'Authorization': tk
+						},
+						success: function(data) {
+							//	console.log(data.Success)
+							if(data.Success) {
+								plus.nativeUI.toast('设置成功');
+								callbask()
+							} else {
+								plus.nativeUI.toast('设置失败');
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							app.ajaxError(errorThrown)	
+						}
+					});
+				}
+//				跳转添加新卡页面
+				function addNew(){
+					plus.webview.getWebviewById('addNewCar').show("pop-in", 300)
+				}
+
+
+				function refresh() {
+					window.reload()
+				}
+			})
+		</script>
+	</body>
+
+</html>

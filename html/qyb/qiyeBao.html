@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+	</head>
+
+	<body style="background: #fff">
+		<!--头部-->
+		<header id="header" class="mui-bar mui-bar-transparent" style="background-color: rgba(44, 137, 207, 0)">
+			<h1 class="mui-title" style="">企业宝</h1>
+		</header>
+		<div class="mui-content main" >
+			<!--总资产信息-->
+			<div class="AssetsMsgBox" id="content">
+				<script id="assetsTmp" type="text/template">
+					<article class="allAssets">
+						<p>金额</p>
+						<h3 style="line-height: 2;">{{TreasureAmount}}</h3>
+					</article>
+					<aside class="AssetsHalf flex" style="background: rgba(0,0,0,.1);">
+						<div class="Assetsleft">
+							<p style="text-align: center;line-height: 2;">昨日收益</p>
+							<h4 style="">{{TreasureYesterdayIncome}}</h4>
+						</div>
+						<div class="Assetsright">
+							<p style="text-align: center;line-height: 2;">累计收益</p>
+							<h4 style="">{{TreasureTotalIncome}}</h4>
+						</div>
+					</aside>
+				</script>	
+			</div>
+
+			<!--快捷入口-->
+			<div class=" quickMenu" >
+				<div class="container mui-clearfix" style="padding: 0 10px;">
+					<h4 class="com_ti1" style="margin: 15px auto;">便捷操作</h4>
+				</div>			
+				<ul style="padding: 0 10px;">
+					<li class="quickMenulis " >
+						<!--<a href="qyb-in.html" hid="qyb-in" class="a" >--> 
+						<a href="#" id="toIn" class="a">	
+							<img src="../../img/qy_3.png" alt="" />
+							<p>存入金额</p>
+						</a>
+					</li>
+					<li class="quickMenulis" >
+						<!--<a href="qyb-out.html" hid="qyb-out" class="a">-->
+						<a href="#" id="toOut" class="a">
+							<img src="../../img/qy_2.png" alt="" />
+							<p>转出金额</p>
+						</a>
+					</li>
+					<li class="quickMenulis">
+						<a href="qyb-balance.html" hid="qyb-balance"  class="a">
+							<img src="../../img/qy_1.png" alt="" />
+							<p>收支明细</p>
+						</a>
+					</li>
+					<!--<li class="quickMenulis">
+						<a href="qyb-profit.html" hid="qyb-profit">
+							<img src="../../img/qy_4.png" alt="" />
+							<p>收益报表</p>
+						</a>
+					</li>-->
+					<li class="quickMenulis"> 
+						<a href="./rule.html" hid="rule" class="a">
+							<img src="../../img/100c43e3f59b471cbd969939f01f07de.png" alt="" />
+							<p class=" " >
+								交易规则
+							</p>
+						</a>
+					</li>
+				</ul>
+			</div>
+			
+
+			<!--交易规则-->
+			<ul class="mui-table-view">
+				
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/arttemp.js"></script>
+		<script src="../../js/app.js"></script>
+		
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+				keyEventBind: {
+					backbutton: false, //Boolean(默认true)关闭back按键监听
+					menubutton: false //Boolean(默认true)关闭menu按键监听
+				},
+			})
+
+			mui.plusReady(function() {
+//				alert(0)
+				app.initHeader();
+				
+				var self = plus.webview.currentWebview(); 
+				var tk = app.getState().token;
+				
+//				首次加载金额数据
+				mui.ajax(app.baseUrl + '/Data/api/Account/AmountIncome', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					success: function(data) {
+						if(data.Success) {
+							var html = template('assetsTmp', data.Data);
+							document.getElementById('content').innerHTML = html;
+							allAccount = data.Data
+							//预加载页面
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(errorThrown)
+					}
+				});
+
+				
+//				从账户转入企业宝    按钮需要传参账户余额所以单独写			
+				mui('.quickMenu').on('tap', '#toIn', function() {
+					app.jumpPage('qyb-in.html','qyb-in',{
+						AccountAmount:allAccount.AccountAmount
+					})
+				})	
+//				从企业宝转入账户    按钮需要传参账户余额所以单独写			
+				mui('.quickMenu').on('tap', '#toOut', function() {
+					app.jumpPage('qyb-out.html','qyb-out',{
+						TreasureAmount:allAccount.TreasureAmount
+					})
+				})	
+
+
+			})
+		</script>
+	</body>
+
+</html>

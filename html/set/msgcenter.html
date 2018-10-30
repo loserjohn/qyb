@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>消息中心</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<style>
+			.msgcontentList {
+				padding-top: 9px;
+				/*background: red;*/
+				position: relative;
+			}
+			
+			.msgcontentList .iconfont {
+				/*margin-top: 10px;*/
+			}
+			
+			.hasRead {
+				position: absolute;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: red;
+				right: 0;
+				top: 0;
+				box-shadow: 0 0 3px #444;
+			}
+			
+			.hasReadMsg .hasRead {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav mui-clearfix subhead" id="header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;" ></a>
+			<h1 class="mui-title">消息中心</h1>
+			
+		</header>-->
+
+		<div class="mui-content fullscreen" id="content">
+			<div id="listInfoBox">
+				<ul class="mui-table-view  " id="listInfo">
+					<script id="productsTmp" type="text/template">
+						{{each ListInfo value i}}
+						<li class="mui-table-view-cell mui-collapse " key={{value.INFO_CODE}}>
+							<a class="mui-navigate-right ">
+								<div style="width: 94%;height: 40px;" class="flex">
+
+									<div class=" txt-l msgcontentList">
+										<%  if(value.INFO_STATUS==1){ %>
+										<p class="hasRead"></p>
+										<%  } %>
+										<%  if(value.BUSI_TYPE==1){ %>
+										<i class="iconfont icon-chongzhi " style="color:#fba11b;font-size: 40px;"></i>
+										<% } else if(value.BUSI_TYPE==2){ %>
+										<i class="iconfont icon-tixian " style="color:#81C2D6;font-size: 40px;"></i>
+										<% }else if(value.BUSI_TYPE==3){ %>
+										<i class="iconfont icon-chanpinfenxi " style="color:#7A023C;font-size: 40px;"></i>
+										<%  } %>
+
+									</div>
+									<div class="f1 ">
+										<p class="timed txt-r" style="line-height: 40px;">{{value.INFO_TIME}}</p>
+									</div>
+
+								</div>
+							</a>
+							<div class="mui-collapse-content ">
+								<h4 class="txt-l">{{value.INFO_TITLE}}:</h4>
+								<p class="txt-l">{{value.INFO_CONTENT}}</p>
+							</div>
+						</li>
+
+						{{/each}}
+					</script>
+				</ul>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/arttemp.js"></script>
+
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+				pullRefresh: {
+					container: "#content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					up: {
+						height: 50, //可选,默认50.触发下拉刷新拖动距离,
+						auto: true, //可选,默认false.首次加载自动下拉刷新一次
+						contentdown: "上拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+						contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+						callback: function() {
+							mui.later(function() {
+								getList()
+							}, 1500)
+						} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					}
+				}
+			})
+			var tk = app.getState().token;
+			var list = {
+				baseUrl: app.baseUrl,
+				ListInfo: []
+			};
+			//				当前页条数		
+			var pageSize = 10
+			//				当前页码	
+			var pageIndex = 1
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				self.setStyle({
+					titleNView: {
+						autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+						titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+						titleSize: "14px", // 字体大小,默认17px
+						backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+						progress: { // 标题栏控件的进度条样式
+							color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+							height: "2px" // 进度条高度,默认值为"2px"         
+						},
+						splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+							color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+							height: "1px" // 分割线高度,默认值为"2px"
+						}
+					}
+				});
+			})
+
+			function getList() {
+				//        首次加载数据
+				mui.ajax(app.baseUrl + '/Data/api/Push/GetListInfo', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					data: {
+						pageSize: pageSize,
+						pageIndex: pageIndex
+					},
+					success: function(data) {
+						if(data.Success) {
+							if(data.Data.ListInfo.length == 0) {
+								plus.nativeUI.toast('没有数据咯');
+								//								mui('#rfbox').pullRefresh().endPullupToRefresh(true);
+								 
+								mui('#content').pullRefresh().endPullupToRefresh(true)
+							} else {
+								var arr = list.ListInfo.concat(data.Data.ListInfo)
+								list.ListInfo = arr
+								//								console.log(list.ListInfo.length)	
+								var html = template('productsTmp', list);
+								document.getElementById('listInfo').innerHTML = html;
+
+								mui('#content').pullRefresh().endPullupToRefresh(false)
+							}
+							pageIndex++
+							//							_this.endPullupToRefresh(true);
+						}
+						if(list.ListInfo.length <= 0) {
+							document.getElementById('listInfo').innerHTML = '<p class="lh3">暂时没有相关项目</p>'
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						app.ajaxError(errorThrown)
+					}
+				});
+			}
+
+			mui('#listInfoBox').on('tap', '.mui-table-view-cell', function() {
+				var key = this.getAttribute('key')
+				//				alert(key)
+				var _this = this
+				mui.ajax(app.baseUrl + '/Data/api/Push/InfoHaveRead', {
+					//			dataType:'json',//服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': tk
+					},
+					data: {
+						info_code: key
+
+					},
+					success: function(data) {
+						if(data.Success) {
+							_this.classList.add('hasReadMsg')
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						app.ajaxError(errorThrown)
+					}
+				});
+
+			})
+		</script>
+	</body>
+
+</html>
