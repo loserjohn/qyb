@@ -165,29 +165,41 @@
 
 				//	           登录按钮监听
 				loginButton.addEventListener('tap', function(event) {
-					plus.nativeUI.showWaiting('正在登陆');
+					
 //					var cid =plus.push.getClientInfo().clientid;	
 //					console.log('deviceToken+'+ plus.push.getClientInfo().token)
+					if(accountBox.value.length < 11) {
+						plus.nativeUI.toast('账号为有效手机号码')
+						return ;
+					}
+					if(!app.checkPhone(accountBox.value)) {
+						plus.nativeUI.toast('无效的手机号')
+						return;
+					}
+					if(passwordBox.value.length < 6) {
+						plus.nativeUI.toast('密码最短为 6 个字符')
+						return ;
+					}
+
 					var loginInfo = {
 						account: accountBox.value,
 						password: Encrypt(passwordBox.value) ,
 //						cid:cid
 					};
-					
+					plus.nativeUI.showWaiting('正在登陆');
 					app.login(loginInfo, function(err) {
-						if(err) {
-							plus.nativeUI.closeWaiting();
-
-							plus.nativeUI.toast(err);
-							return;
-						}
+//						if(err) {
+//							plus.nativeUI.closeWaiting();
+//
+//							plus.nativeUI.toast(err);
+//							return;
+//						}
 						plus.nativeUI.closeWaiting();
 
 						plus.nativeUI.toast('登陆成功');
 
 						//				如果是子页面回调回来的重登情况或者重新登陆
-						if(curr.hasPreload || reLogin) {
-	
+						if(curr.hasPreload || reLogin) {	
 							plus.webview.getWebviewById('index').reload(true)
 							plus.webview.getWebviewById('set').reload(true)
 							plus.webview.getWebviewById('qiyeBao').reload(true)

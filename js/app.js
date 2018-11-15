@@ -117,10 +117,13 @@ mui('.container').on('tap', '#allIn', function() {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			success: function(data) {
-
+				console.log(JSON.stringify(data))
 				//				登陆失败
 				if(!data.Success) {
-					return callback(data.Msg);
+					plus.nativeUI.closeWaiting();
+//alert(data.Msg)
+					plus.nativeUI.toast(data.Msg);
+					return ;
 				} else {
 
 					//					登陆成功
@@ -341,6 +344,14 @@ mui('.container').on('tap', '#allIn', function() {
 		}
 		return true
 	};
+	owner.checkPhone = function(phone){
+		phone = phone || '';
+		// 不符合则返回false
+		if(!(/^1[3|4|5|8|7|6][0-9]\d{4,8}$/.test(phone))) {
+			return false
+		}
+		return true
+	}
 	//	预加载页面
 	owner.prePage = function(url, id, extra) {
 		extra = extra || ''
