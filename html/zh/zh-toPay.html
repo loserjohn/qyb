@@ -25,7 +25,7 @@
 					<article class="moneyBox flex">
 						<p class="txt-r">￥</p>
 						<div class="f1 txt-l">
-							<input type="text" id="inputMoney" name="" value="" />
+							<input type="number" id="inputMoney" name="" value="" />
 						</div>
 					</article>
 				</div>
@@ -102,7 +102,7 @@
 				});
 
 				document.getElementById('weixin').addEventListener('tap', function() {
-					console.log( 'wx');
+//					console.log( 'wx');
 					pay('wxpay');
 				})
 				document.getElementById('zhifubao').addEventListener('tap', function() {
@@ -110,11 +110,18 @@
 					pay('alipay');
 				})
 
-				var ALIPAYSERVER = app.baseUrl +"/Data/api/Pay/CreateAlipayAppPay?subject=111&body=sadf&money=0.1";
-				var WXPAYSERVER = 'http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?money=0.1&body="测试产品"';
+				
 
 				// 2. 发起支付请求 
 				function pay(id) {
+					
+					if(!inputMoney.value){
+						plus.nativeUI.alert('请输入金额');
+						return;
+					}
+					var money = inputMoney.value
+					var ALIPAYSERVER = app.baseUrl +"/Data/api/Pay/CreateAlipayAppPay?subject=测试金额"+money+"&body=测试金额"+money+"&money=" + money;
+					var WXPAYSERVER = 'http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?money=0.1&body="测试产品"';
 					// 从服务器请求支付订单 
 					var PAYSERVER = '';
 					if(id == 'alipay') {
@@ -135,7 +142,7 @@
 							case 4:
 								if(xhr.status == 200) {
 									
-//									console.log(xhr.responseText)
+									console.log(xhr.responseText)
 									plus.payment.request(channel,  JSON.parse(xhr.responseText).Data, function(result) {
 										
 										plus.nativeUI.alert( " 支付成功！ ", function() {
@@ -152,8 +159,10 @@
 								break;
 						}
 					}
+//					alert(app.getState().token)
+				
 					xhr.open('POST', PAYSERVER );
-										
+					xhr.setRequestHeader('Authorization',app.getState().token);						
 					xhr.send();
 				}
 

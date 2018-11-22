@@ -140,7 +140,8 @@
     "refer": [
       "html/cp/purchase.html",
       "html/cp/holding.html",
-      "login.html"
+      "login.html",
+      "html/cp/cprule.html"
     ],
     "resources": []
   },

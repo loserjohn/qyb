@@ -17,9 +17,23 @@ mui('.main').on('tap', '.a', function() {
 			top: '0px', //新页面顶部位置
 			bottom: '0px', //新页面底部位置
 			scrollIndicator: "none",
-//			plusrequire: 'ahead'
+			titleNView: {
+							autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+							titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+							titleSize: "14px", // 字体大小,默认17px
+							backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+							progress: { // 标题栏控件的进度条样式
+								color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+								height: "2px" // 进度条高度,默认值为"2px"         
+							},
+							splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+								color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+								height: "1px" // 分割线高度,默认值为"2px"
+							}
+						}
+			//			plusrequire: 'ahead'
 		},
-//		createNew: true, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+		//		createNew: true, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
 		show: {
 			autoShow: true, //页面loaded事件发生后自动显示，默认为true
 			duration: 300 //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
@@ -60,55 +74,58 @@ mui('.container').on('tap', '#allIn', function() {
 	}
 });
 
-
-
-
 //app全局工具类
 (function($, owner, CryptoJS) {
 	// 参数配置
 
 	// ********主机域名
-//	owner.baseUrl = 'http://192.168.1.253:8087'
+	//	owner.baseUrl = 'http://192.168.1.253:8087'
 
-//	owner.baseUrl = 'http://www.fjdmll.com'
+	//	owner.baseUrl = 'http://www.fjdmll.com'
 	owner.baseUrl = 'http://manage.ttqyb.com'
 	//	token同一前缀
 	owner.preToken = 'Bearer '
+	owner.CryptoJS = ''
 
+	owner.setIn = function(obj) {
+		owner.CryptoJS = obj
+	}
 	/**
 	 * 用户登录
 	 **/
 	owner.login = function(loginInfo, callback, auto) {
 		callback = callback || $.noop //空函数;
-
-		loginInfo = loginInfo || {};
-		loginInfo.account = loginInfo.account || '';
-		loginInfo.password = loginInfo.password || '';
-
-		if(loginInfo.account.length < 11) {
-			return callback('账号为有效手机号码');
-		}
-		if(!checkPhone(loginInfo.account)) {
-			return callback('无效的手机号');
-		}
-		if(loginInfo.password.length < 6) {
-			return callback('密码最短为 6 个字符');
-		}
+		var realpass = loginInfo.password
 		var dvt;
-		
-		if(plus.os.name == 'Android'){
-			dvt=1
-		}else{
-			dvt=2
+		var info = '';
+		info = loginInfo || {};
+		info.account = loginInfo.account || '';
+		info.password = owner.Encrypt(loginInfo.password);
+		info.cid = loginInfo.cid || '';
+
+		//		if(info.account.length < 11) {
+		//			return callback('账号为有效手机号码');
+		//		}
+		//		if(!checkPhone(loginInfo.account)) {
+		//			return callback('无效的手机号');
+		//		}
+		//		if(loginInfo.password.length < 6) {
+		//			return callback('密码最短为 6 个字符');
+		//		}
+
+		if(plus.os.name == 'Android') {
+			dvt = 1
+		} else {
+			dvt = 2
 		}
 
 		mui.ajax(owner.baseUrl + '/Data/api/Token', {
 			data: {
-				username: loginInfo.account,
-				password: loginInfo.password,
-				cid: loginInfo.cid,
+				username: info.account,
+				password: info.password,
+				cid: info.cid,
 				auto: auto ? 1 : '',
-				devicetype:dvt
+				devicetype: dvt
 			},
 			//			dataType:'json',//服务器返回json格式数据
 			type: 'post', //HTTP请求类型
@@ -117,26 +134,25 @@ mui('.container').on('tap', '#allIn', function() {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			success: function(data) {
-				console.log(JSON.stringify(data))
+				//				console.log(JSON.stringify(data))
+				//				data = console.log(decodeURIComponent(data))
 				//				登陆失败
 				if(!data.Success) {
 					plus.nativeUI.closeWaiting();
-//alert(data.Msg)
-					plus.nativeUI.toast(data.Msg);
-					return ;
+					plus.nativeUI.alert(data.Msg);
+					return;
 				} else {
 
 					//					登陆成功
 					var curToken = owner.preToken + data.Data.access_token;
-//					var settings = owner.getSettings();
-//					settings.autoLogin = true;
-////					alert(settings.autoLogin)
-//					owner.setSettings(settings);
-					if(callback)callback()
-					return owner.createState(loginInfo.account, loginInfo.password, curToken, loginInfo.cid);
-					
+					var settings = owner.getSettings();
+					//					settings.autoLogin = true;
+					owner.setSettings(settings);
+					if(callback) callback()
+					return owner.createState(loginInfo.account, realpass, curToken, loginInfo.cid);
+
 				}
-				
+
 			},
 			error: function(xhr, type, errorThrown) {
 				//异常处理；
@@ -149,8 +165,8 @@ mui('.container').on('tap', '#allIn', function() {
 	/**
 	 * 用户自动登陆
 	 **/
-	owner.autoLogin = function(preIndex,callback) {
-//		console.log('执行了')
+	owner.autoLogin = function(preIndex, callback) {
+		//		alert(111)
 		var tk = app.getState().token;
 		plus.nativeUI.showWaiting('自动登陆校验中...')
 		//					判断tokone过期
@@ -165,17 +181,22 @@ mui('.container').on('tap', '#allIn', function() {
 			success: function(data) {
 				plus.nativeUI.closeWaiting();
 				//							没有过期则直接登陆
-				if(data.Success) {
+				if(false) {
+					//				if(data.Success) {
 					plus.nativeUI.toast('通过身份校验');
 					//								预加载页面
 					preIndex()
 					callback()
 				} else {
+					//					alert(222)
 					var loginInfo = {
 						account: owner.getState().account,
 						password: owner.getState().pass,
+						//						realpass:owner.getState().pass,
 						cid: owner.getState().cid
 					};
+					//					console.log('auto' + loginInfo.password)
+
 					plus.nativeUI.showWaiting('正在登陆');
 					owner.login(loginInfo, function(err) {
 						if(err) {
@@ -190,7 +211,7 @@ mui('.container').on('tap', '#allIn', function() {
 
 						preIndex()
 						callback()
-//						toMain();
+						//						toMain();
 					}, true);
 				}
 			},
@@ -213,8 +234,9 @@ mui('.container').on('tap', '#allIn', function() {
 		state.pass = pass;
 		state.token = token;
 		state.cid = cid;
+		//		console.log('state' + JSON.stringify(state))
 		owner.setState(state);
-		if(callback)return callback();
+		if(callback) return callback();
 	};
 
 	//	获取验证码
@@ -344,7 +366,7 @@ mui('.container').on('tap', '#allIn', function() {
 		}
 		return true
 	};
-	owner.checkPhone = function(phone){
+	owner.checkPhone = function(phone) {
 		phone = phone || '';
 		// 不符合则返回false
 		if(!(/^1[3|4|5|8|7|6][0-9]\d{4,8}$/.test(phone))) {
@@ -410,10 +432,10 @@ mui('.container').on('tap', '#allIn', function() {
 
 	//	页面加载完延迟2秒后跳转
 	owner.createPage = function() {
-//		mui.later(function() {
-//			plus.nativeUI.closeWaiting();
-//			plus.webview.currentWebview().show('slide-in-right', 300);
-//		}, 1000)
+		//		mui.later(function() {
+		//			plus.nativeUI.closeWaiting();
+		//			plus.webview.currentWebview().show('slide-in-right', 300);
+		//		}, 1000)
 	}
 
 	//	月息计算
@@ -435,9 +457,22 @@ mui('.container').on('tap', '#allIn', function() {
 			id: id,
 			styles: {
 				top: '0px', //新页面顶部位置
-				bottom: '0px', //新页面底部位置
-				scrollIndicator: "none",
-				plusrequire: 'ahead'
+			bottom: '0px', //新页面底部位置
+			scrollIndicator: "none",
+				titleNView: {
+					autoBackButton: true, // 标题栏文字,当不设置此属性时，默认加载当前页面的标题，并自动更新页面的标题
+					titleColor: "#fff", // 字体颜色,颜色值格式为"#RRGGBB",默认值为"#000000"
+					titleSize: "14px", // 字体大小,默认17px
+					backgroundColor: "#2786ca", // 控件背景颜色,颜色值格式为"#RRGGBB",默认值为"#F7F7F7"
+					progress: { // 标题栏控件的进度条样式
+						color: "#25eb55", // 进度条颜色,默认值为"#00FF00"  
+						height: "2px" // 进度条高度,默认值为"2px"         
+					},
+					splitLine: { // 标题栏控件的底部分割线，类似borderBottom
+						color: "#2786ca", // 分割线颜色,默认值为"#CCCCCC"  
+						height: "1px" // 分割线高度,默认值为"2px"
+					}
+				}
 			},
 			createNew: true, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
 			show: {
@@ -487,5 +522,19 @@ mui('.container').on('tap', '#allIn', function() {
 			alert('请求没有响应哟')
 		}
 	}
+	owner.Encrypt = function(str) {
+		str = str + '|.|' + new Date().getTime()
+		var key = owner.CryptoJS.enc.Utf8.parse(owner._KEY);
+		var iv = owner.CryptoJS.enc.Utf8.parse(owner._IV);
 
+		var encrypted = '';
+
+		var srcs = owner.CryptoJS.enc.Utf8.parse(str);
+		encrypted = owner.CryptoJS.AES.encrypt(srcs, key, {
+			iv: iv,
+			mode: owner.CryptoJS.mode.CBC,
+			padding: owner.CryptoJS.pad.Pkcs7
+		});
+		return encrypted.ciphertext.toString();
+	}
 }(mui, window.app = {}));

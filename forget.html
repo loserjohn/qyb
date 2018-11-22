@@ -49,11 +49,13 @@
 		<script src="./js/mui.min.js"></script>
 		<script src="./js/common.js"></script>
 		<script src="./js/app.js"></script>
+		<script src="./js/aes.js"></script>
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: false,
 			})
 			mui.plusReady(function() {
+				app.setIn(CryptoJS)
 				var wv = plus.webview.currentWebview();
 				wv.setStyle({
 					titleNView: {
@@ -81,9 +83,57 @@
 				var verificationCode = document.getElementById('verificationCode');
 				var password = document.getElementById('password');
 				var repassword = document.getElementById('repassword');
-				
+				var main_loaded_flag = false;
+				var mainPage =  plus.webview.getWebviewById('index')
 				var intime=false;
 				var resttime=90
+				
+				var preIndex = function() {
+					//					console.log(4)
+					if(!mainPage) {
+						mainPage = mui.preload({
+							"id": 'index',
+							"url": './html/zh/index.html',
+							'styles': {
+								'cachemode': 'noCache'
+							}
+						});
+					} else {
+						main_loaded_flag = true;
+				
+					}
+
+					mainPage.addEventListener("loaded", function() {
+						main_loaded_flag = true;
+						
+					});
+				}
+
+				//             跳转首页								
+				var toMain = function() {
+
+					//使用定时器的原因：
+					//可能执行太快，main页面loaded事件尚未触发就执行自定义事件，此时必然会失败
+					var id = setInterval(function() {
+						if(main_loaded_flag) {
+
+							clearInterval(id);
+							var ws = plus.webview.currentWebview();
+
+							plus.webview.close('login');
+//							mui.fire(mainPage, 'show', null);
+							mainPage.show("pop-in", 300, function() {
+								mainPage.evalJS('tabInit(1)');
+								mainPage.evalJS('closeLoad()');
+						
+//								if(systemOS.ispush){
+//									mainPage.evalJS('openMsgCenter()');
+//									gotoMsgCenter=null
+//								}
+							}, {});
+						}
+					}, 1000);
+				};
 				// 修改密码提交按钮
 				forgetBtn.addEventListener('tap', function(event) {
 					
@@ -92,6 +142,7 @@
 						password:password.value,
 						verificationCode:verificationCode.value
 					}
+//					var cid =plus.push.getClientInfo().clientid;	
 					if(!(/^1[3|4|5|8|7|6][0-9]\d{4,8}$/.test(fogInfo.username))||fogInfo.username.length!=11) {
 						plus.nativeUI.toast('手机号码不合法');
 						return false
@@ -117,7 +168,8 @@
 							mui.alert('修改成功', '直接登录', function() {
 								var loginInfo = {
 									account: username.value,
-									password: password.value
+									password: password.value,
+									cid:''
 								};
 								app.login(loginInfo, function(err) {
 									if(err) {
@@ -126,10 +178,16 @@
 									}
 									plus.nativeUI.toast('登陆成功');
 //								找回密码后自动登陆
-									var mainPage =  plus.webview.getWebviewById('index')
-									mainPage.show("pop-in",300,function(){
+									
+									if(mainPage){
+										mainPage.show("pop-in",300,function(){
 										mainPage.evalJS('tabInit(1)');
 									},{});
+									}else{
+										preIndex();
+										toMain()
+									}
+									
 								});	
 							});
 						}

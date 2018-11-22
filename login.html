@@ -70,7 +70,7 @@
 		<script src="./js/aes.js"></script>
 		<script src="./js/app.js"></script>
 	
-		<script src="./js/push.js"></script>
+		<!--<script src="./js/push.js"></script>-->
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: false,
@@ -82,7 +82,7 @@
 			var reLogin;
 			mui.plusReady(function() {
 				
-				
+				app.setIn(CryptoJS)
 //				是否是消息中心的点击事件出发的
 				var gotoMsgCenter=false
 				void plus.navigator.setStatusBarBackground('#fff');
@@ -99,7 +99,7 @@
 				var main_loaded_flag = false;
 				var tk = app.getState().token;
 //				systemOS.versionInit()
-				systemOS.pushInit()
+//				systemOS.pushInit()
 				//				预加载首页
 				var preIndex = function() {
 					//					console.log(4)
@@ -139,10 +139,10 @@
 								mainPage.evalJS('tabInit(1)');
 								mainPage.evalJS('closeLoad()');
 						
-								if(systemOS.ispush){
-									mainPage.evalJS('openMsgCenter()');
-									gotoMsgCenter=null
-								}
+//								if(systemOS.ispush){
+//									mainPage.evalJS('openMsgCenter()');
+//									gotoMsgCenter=null
+//								}
 							}, {});
 						}
 					}, 1000);
@@ -150,9 +150,9 @@
 
 				//          检查 "登录状态" 是否设置自动登陆
 				if(settings.autoLogin && state.token) {
-						if(systemOS.updated){
-							return 
-						}
+//						if(systemOS.updated){
+//							return 
+//						}
 						app.autoLogin(preIndex,toMain)
 					
 				}
@@ -183,8 +183,10 @@
 
 					var loginInfo = {
 						account: accountBox.value,
-						password: Encrypt(passwordBox.value) ,
-//						cid:cid
+//						password: Encrypt(passwordBox.value) ,
+						password: passwordBox.value ,
+//						realpass:passwordBox.value,
+						cid:''
 					};
 					plus.nativeUI.showWaiting('正在登陆');
 					app.login(loginInfo, function(err) {
